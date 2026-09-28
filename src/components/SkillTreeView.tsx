@@ -6,7 +6,11 @@ export function SkillTreeView() {
   const isUnlocked = useWarRoomStore((s) => s.isUnlocked)
   const canUnlock = useWarRoomStore((s) => s.canUnlock)
   const toggleUnlock = useWarRoomStore((s) => s.toggleUnlock)
+  const deletedSkillIds = useWarRoomStore((s) => s.deletedSkillIds)
+  const deleteSkill = useWarRoomStore((s) => s.deleteSkill)
   const unlockedCount = useWarRoomStore((s) => s.unlockedSkillIds.length)
+
+  const activeSkills = SKILL_TREE.filter((s) => !deletedSkillIds.includes(s.id))
 
   return (
     <div className="flex h-full flex-col rounded-lg border border-ink-700 bg-ink-900">
@@ -16,14 +20,16 @@ export function SkillTreeView() {
           <p className="text-xs text-slate-500">Unlock a skill to grant it to any council seat whose reach covers it.</p>
         </div>
         <span className="font-mono text-xs text-slate-400">
-          {unlockedCount}/{SKILL_TREE.length} unlocked
+          {unlockedCount}/{activeSkills.length} unlocked
+          {deletedSkillIds.length > 0 && ` · ${deletedSkillIds.length} deleted`}
         </span>
       </div>
 
       <div className="scrollbar-thin flex-1 overflow-y-auto p-4">
         <div className="flex flex-col gap-6">
           {SKILL_TIERS.map((tier) => {
-            const nodes = SKILL_TREE.filter((s) => s.tier === tier)
+            const nodes = activeSkills.filter((s) => s.tier === tier)
+            if (nodes.length === 0) return null
             return (
               <div key={tier}>
                 <div className="mb-2 flex items-center gap-2">
@@ -36,32 +42,47 @@ export function SkillTreeView() {
                     const unlockable = canUnlock(skill.id)
                     const locked = !unlocked && !unlockable
                     return (
-                      <button
+                      <div
                         key={skill.id}
-                        onClick={() => toggleUnlock(skill.id)}
-                        disabled={locked}
                         title={
                           locked
                             ? `Locked — requires: ${skill.prerequisites.map((p) => getSkill(p)?.name ?? p).join(', ')}`
                             : skill.description
                         }
-                        className={`group flex flex-col items-start rounded-md border p-3 text-left transition-colors ${
+                        className={`group relative flex flex-col items-start rounded-md border p-3 transition-colors ${
                           unlocked
                             ? 'border-moss/40 bg-moss/10 hover:bg-moss/15'
                             : unlockable
                               ? 'border-ink-600 bg-ink-800 hover:border-signal-500/50 hover:bg-ink-700'
-                              : 'cursor-not-allowed border-ink-700 bg-ink-900/60 opacity-50'
+                              : 'border-ink-700 bg-ink-900/60 opacity-50'
                         }`}
                       >
-                        <div className="flex w-full items-center justify-between gap-2">
-                          <span className="font-mono text-xs font-semibold text-slate-100">{skill.name}</span>
-                          <span className="font-mono text-[10px] text-slate-500">
-                            {unlocked ? '● unlocked' : locked ? '🔒 locked' : '○ ready'}
-                          </span>
-                        </div>
-                        <span className="mt-1 text-[11px] text-slate-500">{skill.category}</span>
-                        <p className="mt-1 text-xs text-slate-400">{skill.description}</p>
-                      </button>
+                        <button
+                          onClick={() => {
+                            if (confirm(`Delete "${skill.name}" from the skill tree? This cannot be undone (short of Reset OS).`)) {
+                              deleteSkill(skill.id)
+                            }
+                          }}
+                          title="Delete this skill"
+                          className="absolute right-2 top-2 rounded px-1.5 py-0.5 text-xs text-slate-600 opacity-0 transition-opacity hover:bg-signal-500/15 hover:text-signal-400 group-hover:opacity-100"
+                        >
+                          ✕
+                        </button>
+                        <button
+                          onClick={() => toggleUnlock(skill.id)}
+                          disabled={locked}
+                          className={`flex w-full flex-col items-start text-left ${locked ? 'cursor-not-allowed' : ''}`}
+                        >
+                          <div className="flex w-full items-center justify-between gap-2 pr-4">
+                            <span className="font-mono text-xs font-semibold text-slate-100">{skill.name}</span>
+                            <span className="font-mono text-[10px] text-slate-500">
+                              {unlocked ? '● unlocked' : locked ? '🔒 locked' : '○ ready'}
+                            </span>
+                          </div>
+                          <span className="mt-1 text-[11px] text-slate-500">{skill.category}</span>
+                          <p className="mt-1 text-xs text-slate-400">{skill.description}</p>
+                        </button>
+                      </div>
                     )
                   })}
                 </div>

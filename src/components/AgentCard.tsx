@@ -7,9 +7,23 @@ export function AgentCard({ agent, onOpenReach }: { agent: CouncilAgent; onOpenR
   const invokable = reach.filter((id) => unlockedIds.includes(id))
   const active = invokable.length > 0
 
+  const deleteAgent = useWarRoomStore((s) => s.deleteAgent)
+
   return (
-    <div className="flex flex-col rounded-md border border-ink-700 bg-ink-800 p-3">
-      <div className="flex items-start justify-between gap-2">
+    <div className="group relative flex flex-col rounded-md border border-ink-700 bg-ink-800 p-3">
+      <button
+        onClick={() => {
+          if (confirm(`Delete "${agent.name}" from the council? This cannot be undone (short of Reset OS).`)) {
+            deleteAgent(agent.id)
+          }
+        }}
+        title="Delete this seat"
+        className="absolute right-2 top-2 rounded px-1.5 py-0.5 text-xs text-slate-600 opacity-0 transition-opacity hover:bg-signal-500/15 hover:text-signal-400 group-hover:opacity-100"
+      >
+        ✕
+      </button>
+
+      <div className="flex items-start justify-between gap-2 pr-4">
         <div>
           <h3 className="font-mono text-sm font-semibold text-slate-100">{agent.name}</h3>
           <p className="text-[11px] text-slate-500">{agent.title}</p>

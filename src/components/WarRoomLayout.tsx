@@ -1,11 +1,16 @@
 import type { ReactNode } from 'react'
 import { useWarRoomStore } from '../store/useWarRoomStore'
 import { SKILL_TREE } from '../data/skillTree'
+import { COUNCIL } from '../data/council'
 
 export function WarRoomLayout({ children }: { children: ReactNode }) {
   const unlockedCount = useWarRoomStore((s) => s.unlockedSkillIds.length)
   const sessionCount = useWarRoomStore((s) => s.sessions.length)
+  const deletedSkillCount = useWarRoomStore((s) => s.deletedSkillIds.length)
+  const deletedAgentCount = useWarRoomStore((s) => s.deletedAgentIds.length)
   const resetAll = useWarRoomStore((s) => s.resetAll)
+  const activeSkillTotal = SKILL_TREE.length - deletedSkillCount
+  const activeAgentTotal = COUNCIL.length - deletedAgentCount
 
   return (
     <div className="flex h-screen flex-col bg-ink-950">
@@ -21,11 +26,12 @@ export function WarRoomLayout({ children }: { children: ReactNode }) {
         </div>
         <div className="flex items-center gap-4">
           <span className="font-mono text-xs text-slate-500">
-            {unlockedCount}/{SKILL_TREE.length} skills · {sessionCount} sessions
+            {unlockedCount}/{activeSkillTotal} skills · {activeAgentTotal}/{COUNCIL.length} seats · {sessionCount}{' '}
+            sessions
           </span>
           <button
             onClick={() => {
-              if (confirm('Reset all skill unlocks, agent reach, and session history?')) resetAll()
+              if (confirm('Reset all skill unlocks, deleted cards, agent reach, and session history?')) resetAll()
             }}
             className="rounded border border-ink-600 px-2.5 py-1 font-mono text-[11px] text-slate-400 hover:border-signal-500/50 hover:text-signal-400"
           >

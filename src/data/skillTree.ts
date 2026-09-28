@@ -149,6 +149,14 @@ export function getSkill(id: string): SkillNode | undefined {
   return SKILL_TREE.find((s) => s.id === id)
 }
 
-export function isUnlockable(skill: SkillNode, unlocked: ReadonlySet<string>): boolean {
-  return skill.prerequisites.every((p) => unlocked.has(p))
+/**
+ * A prerequisite that has been deleted from the tree no longer blocks
+ * anything downstream — it counts as already satisfied.
+ */
+export function isUnlockable(
+  skill: SkillNode,
+  unlocked: ReadonlySet<string>,
+  deleted: ReadonlySet<string> = new Set(),
+): boolean {
+  return skill.prerequisites.every((p) => unlocked.has(p) || deleted.has(p))
 }

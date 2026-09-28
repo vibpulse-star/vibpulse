@@ -8,8 +8,14 @@ import { runAgentTurn } from './agentRunner'
  * restricted to the skills currently inside its reach AND already unlocked
  * in the tree. Produces per-agent verdicts plus a single synthesized stance.
  */
-export function convene(objective: string, reach: ReachMap, unlocked: ReadonlySet<string>): CouncilSession {
-  const verdicts: AgentVerdict[] = COUNCIL.map((agent) => {
+export function convene(
+  objective: string,
+  reach: ReachMap,
+  unlocked: ReadonlySet<string>,
+  deletedAgentIds: ReadonlySet<string> = new Set(),
+): CouncilSession {
+  const seats = COUNCIL.filter((a) => !deletedAgentIds.has(a.id))
+  const verdicts: AgentVerdict[] = seats.map((agent) => {
     const reachable = reach[agent.id] ?? agent.defaultReach
     const invokable = reachable.filter((id) => unlocked.has(id))
     const lockedInReach = reachable.filter((id) => !unlocked.has(id))
@@ -28,13 +34,13 @@ export function convene(objective: string, reach: ReachMap, unlocked: ReadonlySe
         : 'advance'
 
   const weakLinkNames = new Set<string>()
-  for (const agent of COUNCIL) {
+  for (const agent of seats) {
     const reachable = reach[agent.id] ?? agent.defaultReach
     for (const id of reachable) {
       if (!unlocked.has(id)) weakLinkNames.add(getSkill(id)?.name ?? id)
     }
   }
-  const abstained = verdicts.filter((v) => !v.engaged).map((v) => COUNCIL.find((a) => a.id === v.agentId)?.name)
+  const abstained = verdicts.filter((v) => !v.engaged).map((v) => seats.find((a) => a.id === v.agentId)?.name)
   if (abstained.length > 0) {
     weakLinkNames.add(`${abstained.length} seat(s) abstained (no unlocked skill in reach): ${abstained.join(', ')}`)
   }
