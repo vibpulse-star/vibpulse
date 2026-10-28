@@ -12,7 +12,7 @@ All work offline after first load. Data stays on each device; use **Export backu
 
 ## Go live (one-time)
 
-1. Merge to `main`.
+1. Merge to `master`.
 2. GitHub → repo **Settings → Pages → Source: GitHub Actions**. The workflow deploys to `https://vibpulse-star.github.io/vibpulse/`.
 
 ## Install
