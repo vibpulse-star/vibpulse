@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Skill Tree</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="../shared/app.css">
+  <script src="../shared/install.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header>
+    <h1>Skill Tree</h1>
+    <button id="install" class="install" type="button">Install app</button>
+  </header>
+  <p id="install-help" class="help" hidden></p>
+  <main>
+    <section>
+      <h2>Add skill</h2>
+      <form id="add" class="row">
+        <input id="name" placeholder="Skill name" required maxlength="60" aria-label="Skill name">
+        <select id="parent" aria-label="Parent skill"></select>
+        <button type="submit">Add</button>
+      </form>
+    </section>
+    <section>
+      <h2>Tree <span id="xp" class="muted"></span></h2>
+      <div id="tree"></div>
+      <p class="muted">A skill unlocks once its parent reaches level 1. Max level 5.</p>
+    </section>
+  </main>
+  <footer>
+    <div class="row">
+      <button id="export" type="button">Export backup</button>
+      <button id="import" type="button">Import backup</button>
+      <input id="import-file" type="file" accept="application/json" hidden>
+    </div>
+    <p class="muted">Data is saved on this device. Use Export/Import to move it between phone and PC.</p>
+  </footer>
+</body>
+</html>
