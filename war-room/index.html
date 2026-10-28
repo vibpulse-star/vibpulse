@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>War Room</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="../shared/app.css">
+  <script src="../shared/install.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header>
+    <h1>War Room</h1>
+    <button id="install" class="install" type="button">Install app</button>
+  </header>
+  <p id="install-help" class="help" hidden></p>
+  <main>
+    <section>
+      <h2>Mission <span id="today" class="muted"></span></h2>
+      <textarea id="mission" rows="2" style="width:100%" placeholder="The one outcome that matters today" aria-label="Today's mission"></textarea>
+    </section>
+    <section>
+      <h2>Add task</h2>
+      <form id="add" class="row">
+        <input id="text" placeholder="Task" required maxlength="120" aria-label="Task">
+        <select id="priority" aria-label="Priority">
+          <option value="1">P1 · revenue</option>
+          <option value="2" selected>P2 · important</option>
+          <option value="3">P3 · later</option>
+        </select>
+        <button type="submit">Add</button>
+      </form>
+    </section>
+    <section>
+      <h2>Board <span id="counts" class="muted"></span></h2>
+      <div id="board"></div>
+      <div class="row" style="margin-top:12px"><button id="clear-done" class="danger" type="button">Clear done</button></div>
+    </section>
+  </main>
+  <footer>
+    <div class="row">
+      <button id="export" type="button">Export backup</button>
+      <button id="import" type="button">Import backup</button>
+      <input id="import-file" type="file" accept="application/json" hidden>
+    </div>
+    <p class="muted">Data is saved on this device. Use Export/Import to move it between phone and PC.</p>
+  </footer>
+</body>
+</html>
