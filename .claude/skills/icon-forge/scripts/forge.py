@@ -96,7 +96,8 @@ def load_layers(spec, base_dir):
         img = Image.open(os.path.join(base_dir, spec["image"])).convert("RGBA")
         if img.getextrema()[3][0] == 255:  # fully opaque: treat as full-bleed artwork
             return ImageOps.fit(img, (MASTER, MASTER), Image.LANCZOS), None
-        return bg, fit(img.crop(img.getbbox()), MASTER)
+        # trim=false keeps the art's own padding (icon-font glyphs are optically balanced in their em box).
+        return bg, fit(img if spec.get("trim") is False else img.crop(img.getbbox()), MASTER)
     if "glyph" in spec:
         return bg, render_glyph(spec, MASTER)
     raise ValueError(f"icon {spec.get('name')!r} needs \"glyph\" or \"image\"")

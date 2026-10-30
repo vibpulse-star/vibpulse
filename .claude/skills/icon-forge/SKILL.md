@@ -22,7 +22,7 @@ Script: `.claude/skills/icon-forge/scripts/forge.py` (only needs `pip install pi
      "components": ["com.vibpulse.app/com.vibpulse.app.MainActivity"]},
     {"name": "Logo", "image": "logo.png", "bg": "#101418", "safe_zone": 0.6}]
    ```
-   Optional keys: `gradient` (`"diagonal"` default, `"vertical"`), `font` (path), `safe_zone` (adaptive foreground scale, default 0.61 = Android's 66dp/108dp), `pack_shape` (`"squircle"`/`"circle"`), `components` (icon-pack app mappings).
+   Optional keys: `trim` (default true; set `false` for icon-font glyphs so they keep their optical padding and a set looks even), `gradient` (`"diagonal"` default, `"vertical"`), `font` (path), `safe_zone` (adaptive foreground scale, default 0.61 = Android's 66dp/108dp), `pack_shape` (`"squircle"`/`"circle"`), `components` (icon-pack app mappings).
 4. **Generate:** `python .claude/skills/icon-forge/scripts/forge.py icons.json --out build/icons [--targets android,windows,pack]`
 5. **Review:** open `build/icons/preview.png` and look at it before reporting. Columns: Android circle, Android squircle, Android 13+ themed (monochrome), Windows tile, Windows 32px. Fix anything clipped, illegible at 32px, or empty in the themed column, then regenerate.
 6. **Install** (only into projects the user named):

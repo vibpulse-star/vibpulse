@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <version>1</version>
+    <category title="All" />
+    <item drawable="phone" />
+    <item drawable="messages" />
+    <item drawable="contacts" />
+    <item drawable="browser" />
+    <item drawable="camera" />
+    <item drawable="photos" />
+    <item drawable="mail" />
+    <item drawable="maps" />
+    <item drawable="video" />
+    <item drawable="store" />
+    <item drawable="settings" />
+    <item drawable="calendar" />
+    <item drawable="clock" />
+    <item drawable="calculator" />
+    <item drawable="files" />
+    <item drawable="notes" />
+    <item drawable="drive" />
+    <item drawable="chats" />
+    <item drawable="music" />
+    <item drawable="vibpulse" />
+</resources>
