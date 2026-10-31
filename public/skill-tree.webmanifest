@@ -1,0 +1,3 @@
+{ "name": "Skill Tree", "short_name": "Skill Tree", "id": "/skill-tree", "start_url": "/skill-tree", "scope": "/skill-tree", "display": "standalone",
+  "background_color": "#000000", "theme_color": "#000000",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }] }
