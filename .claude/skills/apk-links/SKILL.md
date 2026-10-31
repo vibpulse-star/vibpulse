@@ -22,7 +22,7 @@ https://github.com/vibpulse-star/vibpulse/releases/download/apk-<app>/<app>.apk
 ## Workflow when an app is added or changed
 1. Commit and push. Any push touching `**/android/**` triggers the build. Pull-request runs only build; they don't publish.
 2. Wait for the `Android APKs` run to finish. Don't promise a link before it is green.
-3. Verify each link before sending it: `curl -sIL -o /dev/null -w "%{http_code}" <url>` should return `200`.
+3. Verify each link before sending it: `curl -sI <url>` must return `302`, with a `Location` that contains `filename%3D<app>.apk`. A `404` means it isn't published. Don't follow the redirect (`-L`): this container's proxy blocks the asset host (`objects.githubusercontent.com`), so a full download fails here even when the link works on a phone.
 4. Send the user one link per app, plus the install steps:
    - Open the link on the phone and download.
    - Tap the file, then allow "Install unknown apps" for the browser when Android asks.
