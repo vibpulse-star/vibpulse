@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
-import { adminClient, currentUser } from '@/lib/supabase';
+import { env } from '@/lib/env';
 import { stripe } from '@/lib/stripe';
+import { memberCustomer } from '@/lib/member';
 
 export async function POST() {
-  const site = process.env.NEXT_PUBLIC_SITE_URL!;
-  const user = await currentUser();
-  if (!user) return NextResponse.redirect(new URL('/login', site), 303);
-  const { data } = await adminClient().from('profiles').select('stripe_customer_id').eq('id', user.id).single();
-  if (!data?.stripe_customer_id) return NextResponse.redirect(new URL('/#pricing', site), 303);
-  const portal = await stripe().billingPortal.sessions.create({ customer: data.stripe_customer_id, return_url: `${site}/gaps` });
+  const site = env().SITE_URL;
+  const customer = await memberCustomer();
+  if (!customer) return NextResponse.redirect(`${site}/login`, 303);
+  const portal = await stripe().billingPortal.sessions.create({ customer, return_url: `${site}/gaps` });
   return NextResponse.redirect(portal.url, 303);
 }

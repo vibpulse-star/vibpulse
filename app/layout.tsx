@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav aria-label="Main">
           <a href="/"><strong>Gap-Mining™</strong></a>
           <a href="/gaps">Gaps</a>
-          <a href="/login">Sign in</a>
+          <a href="/login">Subscriber sign in</a>
         </nav>
         {children}
         <footer className="muted">

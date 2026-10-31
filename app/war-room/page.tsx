@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { requireOwner } from '@/lib/owner';
-import { adminClient } from '@/lib/supabase';
+import { env } from '@/lib/env';
 import { stripe } from '@/lib/stripe';
 import { PUBLISH_THRESHOLD, WEIGHTS } from '@/lib/score';
 import { addGap, addPriority, togglePriority } from './actions';
@@ -8,38 +8,44 @@ import { addGap, addPriority, togglePriority } from './actions';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'War Room', manifest: '/war-room.webmanifest', robots: { index: false } };
 
-async function monthlyPrice(): Promise<number | null> {
-  try {
-    const p = await stripe().prices.retrieve(process.env.STRIPE_PRICE_ID!);
-    return p.unit_amount == null ? null : p.unit_amount / 100;
-  } catch { return null; }
+/** Revenue straight from Stripe: active subscriptions × their monthly amount. */
+async function revenue() {
+  let mrr = 0, active = 0, recent = 0;
+  const weekAgo = Date.now() / 1000 - 7 * 86400;
+  for await (const sub of stripe().subscriptions.list({ status: 'active', limit: 100 })) {
+    active++;
+    if (sub.created > weekAgo) recent++;
+    for (const item of sub.items.data) {
+      const { unit_amount, recurring } = item.price;
+      if (unit_amount == null || !recurring) continue;
+      const perMonth = recurring.interval === 'year' ? 1 / 12 : recurring.interval === 'month' ? 1 : NaN;
+      mrr += (unit_amount / 100) * (item.quantity ?? 1) * (perMonth / (recurring.interval_count || 1));
+    }
+  }
+  return { mrr: Number.isFinite(mrr) ? mrr : null, active, recent };
 }
 
 export default async function WarRoom({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   await requireOwner();
   const sp = await searchParams;
-  const db = adminClient();
-  const since = new Date(Date.now() - 7 * 864e5).toISOString();
-  const [subs, newSubs, priorities, hotGaps, drafts, price] = await Promise.all([
-    db.from('subscriptions').select('id', { count: 'exact', head: true }).in('status', ['active', 'trialing']),
-    db.from('subscriptions').select('id', { count: 'exact', head: true }).in('status', ['active', 'trialing']).gte('updated_at', since),
-    db.from('priorities').select('*').order('done').order('created_at', { ascending: false }).limit(20),
-    db.from('gaps').select('id,title,score,published_at').eq('status', 'published').gte('score', PUBLISH_THRESHOLD)
-      .order('published_at', { ascending: false }).limit(5),
-    db.from('gaps').select('id', { count: 'exact', head: true }).eq('status', 'draft'),
-    monthlyPrice(),
+  const db = env().DB;
+  const [rev, priorities, hotGaps, drafts] = await Promise.all([
+    revenue().catch(() => null),
+    db.prepare('SELECT * FROM priorities ORDER BY done, created_at DESC LIMIT 20').all<{ id: number; title: string; done: number }>(),
+    db.prepare(`SELECT id, title, score, published_at FROM gaps WHERE status = 'published' AND score >= ?
+                ORDER BY published_at DESC LIMIT 5`).bind(PUBLISH_THRESHOLD).all<{ id: number; title: string; score: number; published_at: string }>(),
+    db.prepare(`SELECT count(*) AS n FROM gaps WHERE status = 'draft'`).first<{ n: number }>(),
   ]);
-  const active = subs.count ?? 0;
 
   return (
     <main>
       <h1>War Room</h1>
       {sp.m && <p role="status">{sp.m}</p>}
       <div className="grid">
-        <div className="card"><div className="muted">MRR</div><div className="stat">{price == null ? '—' : `£${(active * price).toLocaleString('en-GB')}`}</div></div>
-        <div className="card"><div className="muted">Active subscribers</div><div className="stat">{active}</div></div>
-        <div className="card"><div className="muted">Subs changed (7d)</div><div className="stat">{newSubs.count ?? 0}</div></div>
-        <div className="card"><div className="muted">Draft gaps</div><div className="stat">{drafts.count ?? 0}</div></div>
+        <div className="card"><div className="muted">MRR</div><div className="stat">{rev?.mrr == null ? '—' : `£${Math.round(rev.mrr).toLocaleString('en-GB')}`}</div></div>
+        <div className="card"><div className="muted">Active subscribers</div><div className="stat">{rev?.active ?? '—'}</div></div>
+        <div className="card"><div className="muted">New subs (7d)</div><div className="stat">{rev?.recent ?? '—'}</div></div>
+        <div className="card"><div className="muted">Draft gaps</div><div className="stat">{drafts?.n ?? 0}</div></div>
       </div>
 
       <h2>Today&apos;s priorities</h2>
@@ -48,7 +54,7 @@ export default async function WarRoom({ searchParams }: { searchParams: Promise<
         <button type="submit">Add</button>
       </form>
       <ul>
-        {priorities.data?.map((p) => (
+        {priorities.results.map((p) => (
           <li key={p.id}>
             <form action={togglePriority} style={{ display: 'inline' }}>
               <input type="hidden" name="id" value={p.id} /><input type="hidden" name="done" value={String(!p.done)} />
@@ -61,7 +67,7 @@ export default async function WarRoom({ searchParams }: { searchParams: Promise<
 
       <h2>Gap alerts (score ≥ {PUBLISH_THRESHOLD}, newest)</h2>
       <table><tbody>
-        {hotGaps.data?.map((g) => <tr key={g.id}><td>{g.title}</td><td>{Number(g.score).toFixed(1)}</td>
+        {hotGaps.results.map((g) => <tr key={g.id}><td>{g.title}</td><td>{Number(g.score).toFixed(1)}</td>
           <td className="muted">{g.published_at?.slice(0, 10)}</td></tr>)}
       </tbody></table>
 

@@ -36,3 +36,9 @@ Tests only where money/security live: webhook signature + idempotency, owner gat
 
 ## Decision Log
 Single app/3 routes; Supabase; Stripe hosted; PWA; owner-curated data; no false claims; snapshot names-only.
+
+## Revision 2 (owner decision, 2026-10-31): Cloudflare default, no Supabase
+- Hosting: Cloudflare Workers via @opennextjs/cloudflare. Data: D1 (gaps, gap_sources, priorities, skill_snapshots).
+- Owner auth: Cloudflare Access on /war-room* and /skill-tree*, with Access JWT verified in-app (jose).
+- Member auth: no user table. Stripe is the source of truth. A signed 30-day cookie holds the Stripe customer id; returning users get an emailed 15-minute link via Resend.
+- The webhook and subscriptions table were removed, because access is checked live against Stripe, so there is nothing to drift.

@@ -1,14 +1,11 @@
-import { userClient } from '@/lib/supabase';
+import { publishedGaps } from '@/lib/gaps';
 import { PRICE_LABEL } from '@/lib/brand';
-import { GapCard, type Gap } from './gap-card';
+import { GapCard } from './gap-card';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const { data } = await (await userClient())
-    .from('gaps').select('*, gap_sources(url, source_name)')
-    .eq('is_sample', true).eq('status', 'published').order('published_at', { ascending: false }).limit(1);
-  const sample = (data ?? [])[0] as Gap | undefined;
+  const [sample] = await publishedGaps(true, 1);
 
   return (
     <main>

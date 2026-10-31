@@ -2,7 +2,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireOwner } from '@/lib/owner';
-import { adminClient } from '@/lib/supabase';
+import { env } from '@/lib/env';
 import { gapScore, PUBLISH_THRESHOLD, WEIGHTS, type Factors } from '@/lib/score';
 
 const GAP_TYPES = ['pricing', 'feature', 'service', 'quality', 'market', 'adoption'];
@@ -14,19 +14,20 @@ const text = (f: FormData, k: string, max: number) => {
 
 export async function addPriority(f: FormData) {
   await requireOwner();
-  await adminClient().from('priorities').insert({ title: text(f, 'title', 200) });
+  await env().DB.prepare('INSERT INTO priorities (title) VALUES (?)').bind(text(f, 'title', 200)).run();
   revalidatePath('/war-room');
 }
 
 export async function togglePriority(f: FormData) {
   await requireOwner();
-  await adminClient().from('priorities').update({ done: f.get('done') === 'true' }).eq('id', Number(f.get('id')));
+  await env().DB.prepare('UPDATE priorities SET done = ? WHERE id = ?')
+    .bind(f.get('done') === 'true' ? 1 : 0, Number(f.get('id'))).run();
   revalidatePath('/war-room');
 }
 
 export async function addGap(f: FormData) {
   await requireOwner();
-  let msg = 'saved';
+  let msg: string;
   try {
     const gap_type = String(f.get('gap_type'));
     if (!GAP_TYPES.includes(gap_type)) throw new Error('invalid gap type');
@@ -39,19 +40,20 @@ export async function addGap(f: FormData) {
     const sources = String(f.get('sources') ?? '').split('\n').map((l) => l.trim()).filter(Boolean).map((l) => {
       const [name, url] = l.split('|').map((s) => s.trim());
       if (!name || !/^https?:\/\/\S+$/.test(url ?? '')) throw new Error(`bad source line: ${l}`);
-      return { source_name: name.slice(0, 120), url };
+      return { name: name.slice(0, 120), url };
     });
 
-    const db = adminClient();
-    const { data, error } = await db.from('gaps').insert({
-      title: text(f, 'title', 200), market: text(f, 'market', 120), summary: text(f, 'summary', 8000),
-      gap_type, ...factors, is_sample: f.get('is_sample') === 'on',
-      status: publish ? 'published' : 'draft', published_at: publish ? new Date().toISOString() : null,
-    }).select('id').single();
-    if (error) throw error;
+    const db = env().DB;
+    const gap = await db.prepare(
+      `INSERT INTO gaps (title, market, summary, gap_type, market_size, growth, competition, fit, profit, is_sample, status, published_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id`)
+      .bind(text(f, 'title', 200), text(f, 'market', 120), text(f, 'summary', 8000), gap_type,
+        factors.market_size, factors.growth, factors.competition, factors.fit, factors.profit,
+        f.get('is_sample') === 'on' ? 1 : 0, publish ? 'published' : 'draft', publish ? new Date().toISOString() : null)
+      .first<{ id: number }>();
     if (sources.length) {
-      const { error: e2 } = await db.from('gap_sources').insert(sources.map((s) => ({ ...s, gap_id: data.id })));
-      if (e2) throw e2;
+      await db.batch(sources.map((s) =>
+        db.prepare('INSERT INTO gap_sources (gap_id, source_name, url) VALUES (?,?,?)').bind(gap!.id, s.name, s.url)));
     }
     msg = publish ? `published (${score}/10)` : `draft saved (${score}/10)`;
   } catch (e) {

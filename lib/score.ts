@@ -1,4 +1,4 @@
-// Mirrors the generated `score` column in supabase/schema.sql.
+// Mirrors the generated `score` column in migrations/0001_init.sql.
 export const WEIGHTS = { market_size: 0.25, growth: 0.2, competition: 0.2, fit: 0.15, profit: 0.2 } as const;
 export type Factors = Record<keyof typeof WEIGHTS, number>;
 export const PUBLISH_THRESHOLD = 7;
