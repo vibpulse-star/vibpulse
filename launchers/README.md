@@ -10,11 +10,13 @@ Each app has its own folder, independent of the others:
 
 ## Android
 
-1. On GitHub, go to **Actions → Build launcher APKs**, open the latest green run, and download `<app>-apk`.
-2. Unzip it on the phone and tap `app-debug.apk`. Allow "install unknown apps" for your browser or file manager when prompted.
-3. The icon appears in the app drawer. Long-press it and choose **Add to Home screen**.
+Open the link on your phone, download, tap the file, and allow "Install unknown apps" when asked:
 
-Without GitHub, open `<app>/android` in Android Studio and choose **Build → Build APK(s)**.
+- Gap-Mining: https://github.com/vibpulse-star/vibpulse/releases/download/apk-gap-mining/gap-mining.apk
+- War Room: https://github.com/vibpulse-star/vibpulse/releases/download/apk-war-room/war-room.apk
+- Skill Tree: https://github.com/vibpulse-star/vibpulse/releases/download/apk-skill-tree/skill-tree.apk
+
+Each link always serves the latest build (`.github/workflows/android-apks.yml`). Long-press the new icon in the app drawer and choose **Add to Home screen**.
 Launchers that let you choose a custom icon image (Nova, Lawnchair) can also use `<app>/icon-512.png` on a normal browser shortcut.
 
 ## Windows

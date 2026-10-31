@@ -1,0 +1,75 @@
+name: Android APKs
+
+# Builds every Android project in the repo (any folder named `<app>/android` with a gradlew)
+# and, outside PRs, publishes each to a rolling release so it has a stable download link:
+#   https://github.com/<owner>/<repo>/releases/download/apk-<app>/<app>.apk
+on:
+  push:
+    paths: ["**/android/**", ".github/workflows/android-apks.yml"]
+  pull_request:
+    paths: ["**/android/**", ".github/workflows/android-apks.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.find.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find
+        # App name = folder above android/; names outside [a-z0-9-] are skipped (they become tags and filenames).
+        run: |
+          apps=$(find . -path ./.git -prune -o -path '*/node_modules' -prune -o -type f -path '*/android/gradlew' -print \
+            | sed 's#^\./##; s#/gradlew$##' | sort \
+            | jq -R -s -c 'split("\n") | map(select(length>0)) | map({dir: ., name: (split("/")[-2])})
+                           | map(select(.name | test("^[a-z0-9][a-z0-9-]*$")))')
+          echo "apps=$apps" >> "$GITHUB_OUTPUT"
+          echo "Found: $apps"
+
+  apk:
+    needs: discover
+    if: needs.discover.outputs.apps != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.discover.outputs.apps) }}
+    env:
+      APP: ${{ matrix.name }}
+      DIR: ${{ matrix.dir }}
+      KEYSTORE_B64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Use stable signing key if configured
+        # Without it each build gets a fresh debug key and phones must uninstall before updating.
+        if: env.KEYSTORE_B64 != ''
+        run: mkdir -p ~/.android && echo "$KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+      - name: Build
+        run: cd "$DIR" && chmod +x gradlew && ./gradlew --no-daemon assembleDebug
+      - name: Collect APK
+        run: cp "$DIR/app/build/outputs/apk/debug/app-debug.apk" "$APP.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-apk
+          path: ${{ matrix.name }}.apk
+      - name: Publish download link
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="apk-$APP"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$APP (latest APK)" \
+            --notes "Rolling build of $DIR. Download: $APP.apk" --target "$GITHUB_SHA" --prerelease
+          gh release upload "$tag" "$APP.apk" --clobber
+          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/$APP.apk"
+          echo "### $APP" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url"
