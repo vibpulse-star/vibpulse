@@ -1,0 +1,253 @@
+[
+ {
+  "name": "Phone",
+  "image": "glyphs/call.png",
+  "trim": false,
+  "bg": [
+   "#15C14F",
+   "#2EFAE9"
+  ],
+  "components": [
+   "com.google.android.dialer/com.google.android.dialer.extensions.GoogleDialtactsActivity",
+   "com.samsung.android.dialer/com.samsung.android.dialer.DialtactsActivity"
+  ]
+ },
+ {
+  "name": "Messages",
+  "image": "glyphs/chat.png",
+  "trim": false,
+  "bg": [
+   "#156BC1",
+   "#3F2EFA"
+  ],
+  "components": [
+   "com.google.android.apps.messaging/com.google.android.apps.messaging.ui.ConversationListActivity",
+   "com.samsung.android.messaging/com.android.mms.ui.ConversationComposer"
+  ]
+ },
+ {
+  "name": "Contacts",
+  "image": "glyphs/contacts.png",
+  "trim": false,
+  "bg": [
+   "#15A4C1",
+   "#2E61FA"
+  ],
+  "components": [
+   "com.google.android.contacts/com.android.contacts.activities.PeopleActivity",
+   "com.samsung.android.app.contacts/com.samsung.android.contacts.contactslist.PeopleActivity"
+  ]
+ },
+ {
+  "name": "Browser",
+  "image": "glyphs/language.png",
+  "trim": false,
+  "bg": [
+   "#1540C1",
+   "#722EFA"
+  ],
+  "components": [
+   "com.android.chrome/com.google.android.apps.chrome.Main",
+   "com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity"
+  ]
+ },
+ {
+  "name": "Camera",
+  "image": "glyphs/photo_camera.png",
+  "trim": false,
+  "bg": [
+   "#C1156B",
+   "#FA3F2E"
+  ],
+  "components": [
+   "com.google.android.GoogleCamera/com.android.camera.CameraLauncher",
+   "com.sec.android.app.camera/com.sec.android.app.camera.Camera"
+  ]
+ },
+ {
+  "name": "Photos",
+  "image": "glyphs/photo_library.png",
+  "trim": false,
+  "bg": [
+   "#C115C1",
+   "#FA2E83"
+  ],
+  "components": [
+   "com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity",
+   "com.sec.android.gallery3d/com.samsung.android.gallery.app.activity.GalleryActivity"
+  ]
+ },
+ {
+  "name": "Mail",
+  "image": "glyphs/mail.png",
+  "trim": false,
+  "bg": [
+   "#C11515",
+   "#FAA52E"
+  ],
+  "components": [
+   "com.google.android.gm/com.google.android.gm.ConversationListActivityGmail"
+  ]
+ },
+ {
+  "name": "Maps",
+  "image": "glyphs/map.png",
+  "trim": false,
+  "bg": [
+   "#15C188",
+   "#2EC7FA"
+  ],
+  "components": [
+   "com.google.android.apps.maps/com.google.android.maps.MapsActivity"
+  ]
+ },
+ {
+  "name": "Video",
+  "image": "glyphs/smart_display.png",
+  "trim": false,
+  "bg": [
+   "#C11532",
+   "#FA832E"
+  ],
+  "components": [
+   "com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity"
+  ]
+ },
+ {
+  "name": "Store",
+  "image": "glyphs/shopping_bag.png",
+  "trim": false,
+  "bg": [
+   "#15C1B3",
+   "#2E94FA"
+  ],
+  "components": [
+   "com.android.vending/com.android.vending.AssetBrowserActivity",
+   "com.sec.android.app.samsungapps/com.sec.android.app.samsungapps.SamsungAppsMainActivity"
+  ]
+ },
+ {
+  "name": "Settings",
+  "image": "glyphs/settings.png",
+  "trim": false,
+  "bg": [
+   "#1515C1",
+   "#A52EFA"
+  ],
+  "components": [
+   "com.android.settings/com.android.settings.Settings"
+  ]
+ },
+ {
+  "name": "Calendar",
+  "image": "glyphs/calendar_month.png",
+  "trim": false,
+  "bg": [
+   "#4F15C1",
+   "#E92EFA"
+  ],
+  "components": [
+   "com.google.android.calendar/com.android.calendar.event.LaunchInfoActivity",
+   "com.samsung.android.calendar/com.samsung.android.app.calendar.activity.MainActivity"
+  ]
+ },
+ {
+  "name": "Clock",
+  "image": "glyphs/schedule.png",
+  "trim": false,
+  "bg": [
+   "#8815C1",
+   "#FA2EC7"
+  ],
+  "components": [
+   "com.google.android.deskclock/com.android.deskclock.DeskClock",
+   "com.sec.android.app.clockpackage/com.sec.android.app.clockpackage.ClockPackage"
+  ]
+ },
+ {
+  "name": "Calculator",
+  "image": "glyphs/calculate.png",
+  "trim": false,
+  "bg": [
+   "#C14015",
+   "#FAD82E"
+  ],
+  "components": [
+   "com.google.android.calculator/com.android.calculator2.Calculator",
+   "com.sec.android.app.popupcalculator/com.sec.android.app.popupcalculator.Calculator"
+  ]
+ },
+ {
+  "name": "Files",
+  "image": "glyphs/folder.png",
+  "trim": false,
+  "bg": [
+   "#1579C1",
+   "#2E2EFA"
+  ],
+  "components": [
+   "com.google.android.apps.nbu.files/com.google.android.apps.nbu.files.home.HomeActivity",
+   "com.sec.android.app.myfiles/com.sec.android.app.myfiles.common.MainActivity"
+  ]
+ },
+ {
+  "name": "Notes",
+  "image": "glyphs/sticky_note_2.png",
+  "trim": false,
+  "bg": [
+   "#C1A415",
+   "#A5FA2E"
+  ],
+  "components": [
+   "com.google.android.keep/com.google.android.keep.activities.BrowseActivity",
+   "com.samsung.android.app.notes/com.samsung.android.app.notes.memolist.MemoListActivity"
+  ]
+ },
+ {
+  "name": "Drive",
+  "image": "glyphs/cloud.png",
+  "trim": false,
+  "bg": [
+   "#1524C1",
+   "#942EFA"
+  ],
+  "components": [
+   "com.google.android.apps.docs/com.google.android.apps.docs.app.NewMainProxyActivity"
+  ]
+ },
+ {
+  "name": "Chats",
+  "image": "glyphs/forum.png",
+  "trim": false,
+  "bg": [
+   "#15C124",
+   "#2EFAB6"
+  ],
+  "components": [
+   "com.whatsapp/com.whatsapp.Main"
+  ]
+ },
+ {
+  "name": "Music",
+  "image": "glyphs/music_note.png",
+  "trim": false,
+  "bg": [
+   "#24C115",
+   "#2EFA94"
+  ],
+  "components": [
+   "com.spotify.music/com.spotify.music.MainActivity"
+  ]
+ },
+ {
+  "name": "VibPulse",
+  "image": "../icons/vibpulse/art.png",
+  "bg": [
+   "#7C4DFF",
+   "#00E5FF"
+  ],
+  "components": [
+   "com.vibpulse.app/com.vibpulse.app.MainActivity"
+  ]
+ }
+]
