@@ -16,6 +16,8 @@ from pathlib import Path
 from openpyxl import load_workbook
 from PIL import Image
 
+from listing_kit import lo_csv
+
 P = Path(__file__).resolve().parents[1]
 PRODUCTS = [  # folder, name, kind, launch, full, checks
     ("sole-trader-tracker", "Sole Trader Quarterly Tracker 2026-27", "Product", 8.99, 14.99, 191),
@@ -52,6 +54,23 @@ def field(text, label):
     return m.group(1).strip() if m else ""
 
 
+DMY = re.compile(r"^(\d{2})/(\d{2})/(\d{4})$")
+MAX_ROWS = 45  # shortcut: preview shows the first 45 filled rows of each tab; the file itself has them all
+
+
+def sheets(xlsx):
+    """Every tab of the EXAMPLE workbook as LibreOffice recalculated it, empty rows dropped."""
+    csvs = lo_csv(xlsx)
+    out = []
+    for name in load_workbook(xlsx, read_only=True).sheetnames:
+        rows = [[DMY.sub(r"\2/\1/\3", c) for c in r[1:]] for r in csvs.get(name, [])]  # drop column A; UK dates
+        rows = [r for r in rows if any(c.strip() for c in r)]
+        width = max((max((i + 1 for i, c in enumerate(r) if c.strip()), default=0) for r in rows), default=0)
+        rows = [r[:width] + [""] * (width - len(r[:width])) for r in rows]
+        out.append({"name": name, "rows": rows[:MAX_ROWS], "total_rows": len(rows)})
+    return out
+
+
 def files(folder):
     return [{"name": f.name, "size_kb": round(f.stat().st_size / 1024)} for f in sorted((P / folder / "dist").iterdir())]
 
@@ -71,6 +90,7 @@ for folder, name, kind, launch, full, checks in PRODUCTS:
         "images": [data_url(Image.open(f), 900) for f in imgs], "image_names": [f.name for f in imgs],
         "guide_pages": guide_pages(next((P / folder / "dist").glob("*Guide.pdf"))),
         "files": files(folder), "tabs": load_workbook(blank, read_only=True).sheetnames,
+        "sheets": sheets(next((P / folder / "dist").glob("*EXAMPLE.xlsx"))),
     })
 
 bmd = (P / "bundles" / "LISTING.md").read_text(encoding="utf-8")
@@ -88,9 +108,12 @@ for heading, name, zipname, cover, parts, price in BUNDLES:
         "image_names": [cover] + part_rows[0]["image_names"][1:],
         "guide_pages": [],
         "files": [{"name": zipname, "size_kb": round((P / "bundles" / "dist" / zipname).stat().st_size / 1024)}],
-        "tabs": [],
+        "tabs": [], "sheets": [],
+        "contains": [r["product"] for r in part_rows],
     })
 
+for r in rows:
+    r.setdefault("contains", [])
 for r in rows:  # the limits Etsy enforces, checked before anything is uploaded
     assert r["etsy_title_len"] <= 140, r["product"]
     assert len(r["tags"]) == 13 and max(map(len, r["tags"])) <= 20, r["product"]
