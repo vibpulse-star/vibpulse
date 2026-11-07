@@ -1,19 +1,28 @@
-# Launch manifest. One per project. Copy happens via: python launch.py new <slug> --date YYYY-MM-DD
+# Launch manifest. One per project. Created via: python launch.py new <slug> --date YYYY-MM-DD
 slug = "__SLUG__"
 name = ""
-launch_date = __DATE__          # TOML date, no quotes
+launch_date = __DATE__          # unquoted TOML date. Pick a Tuesday or Wednesday (PH T0, HN T+1 must be Tue-Thu)
 url = ""
 one_liner = ""                  # "<Product> helps <audience> <outcome> without <pain>." Under 60 chars for PH tagline.
 audience = ""                   # One specific person, not a market. "Solo Shopify sellers doing <$10k/mo"
 category = ""                   # The category you want to be compared in (April Dunford)
 
-# Success is decided BEFORE launch, not rationalised after.
+# Success is decided BEFORE launch, not rationalised after. Both need a number.
 success_metric = ""             # e.g. "paying customers", "activated signups", "MRR GBP"
 success_target = ""             # e.g. "25 by T+30"
 kill_threshold = ""             # below this at T+30 => pivot/kill. e.g. "5 paying"
 
-# Opt-in channels. "core" is always included. See tasks.toml for every channel id.
+# Opt-in channels ("core" always included): email twitter producthunt hn reddit linkedin
+# indiehackers directories play ios ltd validation. Unknown ids are rejected.
 channels = ["email", "twitter", "producthunt", "hn", "reddit", "directories"]
 
 # Completed task ids. Keep on ONE line (launch.py done edits it).
 done = []
+
+# Filled at T+7 (metrics-d7) and T+30 (verdict). Feeds `status` and the cross-project retro.
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+top_channel = ""

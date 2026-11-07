@@ -17,7 +17,7 @@ The reasoning behind `tasks.toml`. Evidence tags: **[Certain]** primary source, 
 | Dev tool / open source | hn, twitter | producthunt, reddit, directories | ltd |
 | Prosumer / productivity SaaS | producthunt, email | twitter, reddit, indiehackers | |
 | B2B SaaS | email, linkedin | producthunt, directories | reddit (mostly) |
-| Mobile app | appstore, twitter | producthunt, reddit | hn (unless technical) |
+| Mobile app | play / ios, twitter | producthunt, reddit | hn (unless technical) |
 | Info product / template | twitter, email | reddit, indiehackers | hn |
 
 [Guessing] This matrix is my synthesis. Trust your own retro data over it once you have two launches.
@@ -30,7 +30,7 @@ The reasoning behind `tasks.toml`. Evidence tags: **[Certain]** primary source, 
 
 ## Launch-week variant (for mature products)
 
-Supabase / Vercel model: fixed date, flexible scope. Ship one item per day for five days, each with a blog post, a technical thread and a demo. Announce ~2 weeks ahead and run a retro afterwards. [Certain] To use it, create five manifests with consecutive `launch_date`s.
+Supabase / Vercel model: fixed date, flexible scope. Ship one item per day for five days, each with a blog post, a technical thread and a demo. Announce ~2 weeks ahead and run a retro afterwards. [Certain] To use it, create five manifests on consecutive dates. In manifests 2-5, list only the day-specific channels and immediately `done` the core pre-launch tasks, which were already done in manifest 1.
 
 ## Failure modes the gates exist to stop
 
@@ -43,6 +43,22 @@ Supabase / Vercel model: fixed date, flexible scope. Ship one item per day for f
 | Absent on launch day | `launch-day-block` |
 | One launch, then silence | `next-launch`, `retro` |
 | Using an LTD as validation | `ltd-decision` only after `verdict` |
+| Interest without payment | `presell`, `payments`, `launch-offer` |
+| Legal exposure (GDPR/PECR, VAT) | `legal-basics`, `waitlist-page` consent |
+| Vote-ring flags | email and DMs link to your own site, not the PH/HN page |
+| Two launches colliding | `gate` warns on projects within 14 days |
+
+## Council review (2026-11-07)
+
+Three reviewers looked at the draft: Strategist for revenue and scope, Skeptic for failure modes, Herald for growth. Adopted:
+- **New gates:** `payments`, `load-check`, `presell`, `legal-basics`, `reddit-karma`.
+- **New tasks:** `launch-offer`, `activation-emails`, `share-loop`, `social-proof`, `upgrade-nudge`, `review-capture`, `seo-compound`, `shipped-email`, and the Android `play-*` tasks.
+- **Timing:** audience tasks moved from T-30 to T-60. `next-launch` now depends on the verdict. `pmf-survey` moved to the opt-in `validation` channel.
+- **Code:** channel and date validation, BOM-safe file reads, a `done` regex that tolerates trailing comments, slug validation, Tue-Thu weekday warnings, cross-project collision warnings, a `[results]` table, and per-file error isolation in `status`.
+
+Rejected:
+- An `undo` command: editing the line by hand is enough.
+- Making `share-loop` and `launch-offer` gates: too many gates train the user to ignore the check.
 
 ## Sources
 

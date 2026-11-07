@@ -25,4 +25,4 @@ python test_launch.py                          # self-check
 
 ## Channels
 
-`core` is always on. Opt in per manifest from: `email`, `twitter`, `producthunt`, `hn`, `reddit`, `linkedin`, `indiehackers`, `directories`, `appstore`, `ltd`. See the channel matrix in PLAYBOOK.md.
+`core` is always on. Opt in per manifest from: `email`, `twitter`, `producthunt`, `hn`, `reddit`, `linkedin`, `indiehackers`, `directories`, `play`, `ios`, `ltd`, `validation`. Unknown ids are rejected. See the channel matrix in PLAYBOOK.md.
