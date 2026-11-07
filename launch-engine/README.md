@@ -15,6 +15,40 @@ python launch.py status                        # overdue + next 3 across ALL pro
 python test_launch.py                          # self-check
 ```
 
+## Interactive app (Windows + Android)
+
+`app/` is an installable web app that works offline. It has:
+- **Command**: portfolio totals, the overdue tasks to fix first, and a card per project with progress, GO/NO-GO and warnings.
+- **Agenda**: open tasks across all projects for the next 14 days.
+- **Project tabs**:
+  - **Plan**: tick tasks off and filter by open, gates, overdue or channel.
+  - **Gate**: what still blocks GO.
+  - **Results**: enter the numbers to get a double down, pivot or kill verdict.
+  - **Settings**: edit the project, or download its `.toml`.
+- **Library**: the full task library and the reasoning behind each task.
+
+```powershell
+python launch.py export            # tasks.toml + projects/*.toml -> app/data.json
+cd app; python -m http.server      # open http://localhost:8000, then Install app (Edge/Chrome)
+node ..\tests\engine.test.mjs    # app logic tests (mirror test_launch.py)
+```
+To use it on your phone, host `app/` on any static host (GitHub Pages, or Cloudflare Pages next to Gap-Mining) and install it from Chrome on Android. Data stays on each device. Use **⋯ → Export backup / Import backup** to move it between PC and phone, and **Download manifest** to send app edits back to the CLI.
+
+## Project kinds
+
+| kind | Base plan | Use for |
+|---|---|---|
+| `saas` | full `core` (presell, legal, payments, analytics, launch day) | Gap-Mining |
+| `digital` | `core` minus SaaS-only tasks, plus the `marketplace` channel | Etsy/Payhip trackers and bundles |
+| `internal` | `internal` rollout plan: pick one build, deploy, install, back up, verdict | War Room, Skill Tree |
+
+## Your portfolio (projects/)
+
+The manifests come from what exists on your other branches. Targets marked PROPOSED need your sign-off.
+- `sole-trader-tracker`, `landlord-tracker`, `etsy-seller-tracker` and `tax-bundles` launch on staggered Tuesdays so they're live before the January Self Assessment rush. Listing copy and images already exist and are marked done.
+- `gap-mining` launches 2027-01-12. Its targets come from its own council doc: at least 10 paid at T+30. It has 13 blockers, starting with legal placeholders, domain and Stripe.
+- `war-room` and `skill-tree` are internal. Each has 2-3 duplicate builds, and the first gate is choosing one.
+
 ## The loop
 
 1. `new`: commit to a date and to success/kill numbers before building hype.
@@ -25,4 +59,4 @@ python test_launch.py                          # self-check
 
 ## Channels
 
-`core` is always on. Opt in per manifest from: `email`, `twitter`, `producthunt`, `hn`, `reddit`, `linkedin`, `indiehackers`, `directories`, `play`, `ios`, `ltd`, `validation`. Unknown ids are rejected. See the channel matrix in PLAYBOOK.md.
+`core` is always on. Opt in per manifest from: `email`, `twitter`, `producthunt`, `hn`, `reddit`, `linkedin`, `indiehackers`, `directories`, `play`, `ios`, `ltd`, `validation`, `marketplace`. Unknown ids are rejected. See the channel matrix in PLAYBOOK.md.

@@ -1,0 +1,22 @@
+# Source: products/ on branch ccr-95590ecc-o2ezwx. Price £8.99 launch (30 days / 20 reviews), then £14.99. url = Etsy listing once published.
+slug = "sole-trader-tracker"
+kind = "digital"
+name = "Sole Trader Quarterly Tracker 2026-27"
+launch_date = 2026-11-17
+url = ""
+one_liner = "Quarterly MTD-ready tracker for UK sole traders, no software subscription"
+audience = "UK sole traders preparing for MTD quarterly updates"
+category = "UK self-assessment spreadsheets"
+success_metric = "sales (Etsy + Payhip)"
+success_target = "20 by T+30 (PROPOSED - confirm)"
+kill_threshold = "3 (PROPOSED - confirm)"
+channels = ["marketplace"]
+done = ["positioning", "demo-asset", "mk-images", "mk-seo"]
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

@@ -1,0 +1,22 @@
+# Implementations: Next.js snapshot route (ccr-35b9a00d-dsor9b), static PWA (three-cross-platform-apps-q4ve6h), React DAG (focused-carson-htx0fp).
+slug = "skill-tree"
+kind = "internal"
+name = "Skill Tree"
+launch_date = 2026-12-01
+url = ""
+one_liner = "Map of Claude skills and plugins with overlaps and gaps"
+audience = "Iain (owner)"
+category = "internal tool"
+success_metric = "days used per week"
+success_target = "3 of 7"
+kill_threshold = "1 of 7"
+channels = []
+done = []
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Launch Engine</title>
+  <meta name="description" content="Plan, gate and measure every product launch from one place.">
+  <meta name="theme-color" content="#0f1115">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <a class="brand" href="#/" aria-label="Launch Engine home">
+      <img src="icon.svg" alt="" width="28" height="28"><span>Launch Engine</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#/" data-nav="home">Command</a>
+      <a href="#/agenda" data-nav="agenda">Agenda</a>
+      <a href="#/library" data-nav="library">Library</a>
+      <a href="#/new" data-nav="new" class="btn-nav">+ Project</a>
+    </nav>
+    <details class="menu">
+      <summary aria-label="Data menu">⋯</summary>
+      <div class="menu-body">
+        <button type="button" id="export">Export backup</button>
+        <button type="button" id="import">Import backup</button>
+        <button type="button" id="reset">Reset to repo data</button>
+        <button type="button" id="install" hidden>Install app</button>
+        <input type="file" id="import-file" accept="application/json" hidden>
+      </div>
+    </details>
+  </header>
+  <main id="main" tabindex="-1"><p class="muted">Loading…</p></main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

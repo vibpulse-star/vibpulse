@@ -1,0 +1,22 @@
+# Source: docs/council-design.md on branch ccr-35b9a00d-dsor9b (30-day gate: >=10 paid, visitor->email >=8%). Legal pages still have [BRACKET] placeholders; domain, Stripe and Resend are not set up.
+slug = "gap-mining"
+kind = "saas"
+name = "Gap-Mining: Weekly Gap Drop"
+launch_date = 2027-01-12
+url = ""
+one_liner = "Three scored market gaps a week, with cited sources"
+audience = "Solo founders and indie makers choosing what to build next"
+category = "market research newsletter"
+success_metric = "paid subscribers (£149/mo)"
+success_target = "10 by T+30"
+kill_threshold = "3"
+channels = ["email", "twitter", "linkedin", "indiehackers", "producthunt", "directories"]
+done = []
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

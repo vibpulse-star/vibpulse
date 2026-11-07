@@ -1,0 +1,22 @@
+# Source: products/ on branch ccr-95590ecc-o2ezwx. Price £7.99 launch, then £12.99.
+slug = "etsy-seller-tracker"
+kind = "digital"
+name = "UK Etsy Seller Profit Tracker"
+launch_date = 2026-12-01
+url = ""
+one_liner = "See what you really keep from every Etsy sale after every UK fee"
+audience = "UK Etsy sellers doing their own books"
+category = "Etsy seller tools"
+success_metric = "sales (Etsy + Payhip)"
+success_target = "20 by T+30 (PROPOSED - confirm)"
+kill_threshold = "3 (PROPOSED - confirm)"
+channels = ["marketplace"]
+done = ["positioning", "demo-asset", "mk-images", "mk-seo"]
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

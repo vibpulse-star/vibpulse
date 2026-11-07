@@ -1,5 +1,6 @@
 # Launch manifest. One per project. Created via: python launch.py new <slug> --date YYYY-MM-DD
 slug = "__SLUG__"
+kind = "saas"                   # saas | digital (Etsy/Payhip product) | internal (owner-only tool)
 name = ""
 launch_date = __DATE__          # unquoted TOML date. Pick a Tuesday or Wednesday (PH T0, HN T+1 must be Tue-Thu)
 url = ""
@@ -13,7 +14,7 @@ success_target = ""             # e.g. "25 by T+30"
 kill_threshold = ""             # below this at T+30 => pivot/kill. e.g. "5 paying"
 
 # Opt-in channels ("core" always included): email twitter producthunt hn reddit linkedin
-# indiehackers directories play ios ltd validation. Unknown ids are rejected.
+# indiehackers directories play ios ltd validation marketplace. Unknown ids are rejected.
 channels = ["email", "twitter", "producthunt", "hn", "reddit", "directories"]
 
 # Completed task ids. Keep on ONE line (launch.py done edits it).
@@ -25,4 +26,5 @@ signups = 0
 activated = 0
 paying = 0
 mrr = 0
+metric_value = 0                # current value of success_metric; drives the verdict
 top_channel = ""

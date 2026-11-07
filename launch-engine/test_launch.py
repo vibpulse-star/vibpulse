@@ -53,6 +53,15 @@ with tempfile.TemporaryDirectory() as tmp:
     (Path(tmp) / "q.toml").write_text(text.replace("2026-12-01", "2026-12-09"))
     assert launch.findCollisions("p", saved) == ["q launches 2026-12-09, within 14 days"]
 
+# Project kinds: digital skips saas-only tasks, internal gets only the internal channel; collisions are saas-only
+KT = TASKS + [{"id": "s", "day": -5, "channel": "core", "title": "S", "gate": True, "kinds": ["saas"]},
+              {"id": "i", "day": -1, "channel": "internal", "title": "I", "gate": True}]
+assert "s" in [t["id"] for t in launch.selectTasks(KT, [], "saas")]
+assert "s" not in [t["id"] for t in launch.selectTasks(KT, [], "digital")]
+assert [t["id"] for t in launch.selectTasks(KT, [], "internal")] == ["i"]
+assert launch.findCollisions("p", {**MANIFEST, "kind": "digital"}) == []
+expectError(lambda: launch.validateManifest({**MANIFEST, "kind": "app"}, TASKS, "m"))
+
 # Real library + template must parse and reference only known channels/ids.
 real = launch.loadTasks()
 ids = [t["id"] for t in real]
