@@ -13,7 +13,7 @@ success_target = ""             # e.g. "25 by T+30"
 kill_threshold = ""             # below this at T+30 => pivot/kill. e.g. "5 paying"
 
 # Opt-in channels. "core" is always included. See tasks.toml for every channel id.
-channels = ["email", "x", "producthunt", "hn", "reddit", "directories"]
+channels = ["email", "twitter", "producthunt", "hn", "reddit", "directories"]
 
 # Completed task ids. Keep on ONE line (launch.py done edits it).
 done = []

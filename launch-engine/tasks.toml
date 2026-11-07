@@ -1,0 +1,299 @@
+# Master task library. Every project's plan is generated from this file.
+# day = offset from launch day (T0). gate = true => must be done before `launch.py gate` returns GO
+# (only gates with day <= 0 block). channel = "core" applies to every project; others are opt-in per manifest.
+# Sources for every task: PLAYBOOK.md.
+
+# ---------- CORE: positioning, product readiness, measurement ----------
+[[task]]
+id = "positioning"
+day = -30
+channel = "core"
+gate = true
+title = "Write Dunford positioning: alternatives, unique attributes, value, best-fit customer, category"
+why = "Every channel's copy derives from this; skipping it produces hype titles that HN/Reddit punish."
+
+[[task]]
+id = "success-criteria"
+day = -30
+channel = "core"
+gate = true
+title = "Fix success_metric, success_target and kill_threshold in the manifest"
+why = "Decide what 'worked' means before the dopamine of launch day. Rank is vanity; activation and revenue are not."
+
+[[task]]
+id = "beta-users"
+day = -28
+channel = "core"
+title = "Recruit 10-20 beta users from the target audience; onboard them personally"
+why = "Superhuman pattern: onboarding is research. Finds the top friction before strangers do."
+
+[[task]]
+id = "pmf-survey"
+day = -14
+channel = "core"
+title = "Run Sean Ellis survey on beta users ('very disappointed' %); record the score"
+why = "Superhuman held its gate until ~40% very disappointed. Below that, a launch amplifies a leaky product."
+
+[[task]]
+id = "self-serve"
+day = -10
+channel = "core"
+gate = true
+title = "Stranger test: someone unaided reaches first value in <5 min, no signup wall before value where possible"
+why = "PostHog launched only once strangers could self-serve; Show HN rejects signup-gated products."
+
+[[task]]
+id = "analytics"
+day = -10
+channel = "core"
+gate = true
+title = "Instrument signup, activation event and payment; UTM per channel; verify events fire"
+why = "Without per-channel attribution you cannot tell which channel to repeat next launch."
+
+[[task]]
+id = "payments"
+day = -10
+channel = "core"
+title = "Pricing page live and checkout works end to end (real card, refunded)"
+why = "Levels: charge from day one. Launch traffic that can't pay is wasted traffic."
+
+[[task]]
+id = "demo-asset"
+day = -7
+channel = "core"
+gate = true
+title = "Record 30-60s demo video/GIF showing the core outcome, plus 3-5 screenshots"
+why = "Reused across PH gallery, HN first comment, X, Reddit, email. One asset, every channel."
+
+[[task]]
+id = "load-check"
+day = -3
+channel = "core"
+title = "Smoke-test production under a burst (signup, core flow, payment); set up error alerting"
+why = "A launch spike that hits a broken signup is unrecoverable; the spike decays in ~72h."
+
+[[task]]
+id = "launch-day-block"
+day = -1
+channel = "core"
+gate = true
+title = "Clear the calendar for 12+ hours on T0 to reply to every comment"
+why = "The comment thread IS the launch on PH and HN; engagement through the day beats one spike."
+
+[[task]]
+id = "reply-all"
+day = 0
+channel = "core"
+title = "Reply to every comment, DM and email within the hour, all day"
+
+[[task]]
+id = "fix-top3"
+day = 2
+channel = "core"
+title = "Ship fixes for the top 3 complaints from launch feedback; reply in-thread when fixed"
+
+[[task]]
+id = "personal-followup"
+day = 3
+channel = "core"
+title = "Personally email every new signup who didn't activate; ask what blocked them"
+
+[[task]]
+id = "metrics-d7"
+day = 7
+channel = "core"
+title = "Record D1/D7 retention, activation rate and conversion per channel in the manifest notes"
+
+[[task]]
+id = "retro"
+day = 14
+channel = "core"
+title = "Launch retro: what channel produced activated/paying users? Update tasks.toml with lessons"
+why = "Supabase runs a retro after every launch week. This is how the engine compounds across projects."
+
+[[task]]
+id = "verdict"
+day = 30
+channel = "core"
+title = "T+30 verdict vs success_target / kill_threshold: double down, pivot or kill"
+
+[[task]]
+id = "next-launch"
+day = 30
+channel = "core"
+title = "Schedule the next launch (v2, integration, new platform, API) and create its manifest"
+why = "Tally 2.0 relaunch: +91% weekly signups. Raycast/Cal relaunch each new surface. Launch again and again."
+
+# ---------- EMAIL / WAITLIST ----------
+[[task]]
+id = "waitlist-page"
+day = -30
+channel = "email"
+gate = true
+title = "Waitlist/landing page live with one-line positioning and email capture"
+why = "Most dependable launch-day asset. Tally's 500-1,500 community members kick-started its PH #1."
+
+[[task]]
+id = "waitlist-updates"
+day = -21
+channel = "email"
+title = "Send weekly build update to the waitlist (progress, screenshot, ask one question)"
+
+[[task]]
+id = "launch-email-draft"
+day = -3
+channel = "email"
+title = "Draft launch email: what it does, link, one ask (try it / leave feedback). Never 'please upvote'"
+
+[[task]]
+id = "launch-email-send"
+day = 0
+channel = "email"
+title = "Send launch email to the whole list"
+
+# ---------- X / BUILD IN PUBLIC ----------
+[[task]]
+id = "bip-start"
+day = -30
+channel = "twitter"
+title = "Start build-in-public posts 3x/week: progress, numbers, failures"
+why = "X only works on an existing audience (Levels: >50% of Photo AI traffic from X with ~350k followers)."
+
+[[task]]
+id = "supporter-dms"
+day = -2
+channel = "twitter"
+title = "DM 20-50 genuine supporters: 'launching on <date>, would love your feedback'. No vote asks"
+
+[[task]]
+id = "x-launch-thread"
+day = 0
+channel = "twitter"
+title = "Post launch thread: problem, demo video, link, story"
+
+[[task]]
+id = "x-numbers-post"
+day = 7
+channel = "twitter"
+title = "Post launch numbers transparently (traffic, signups, revenue, what failed)"
+
+# ---------- PRODUCT HUNT ----------
+[[task]]
+id = "ph-account-warm"
+day = -30
+channel = "producthunt"
+title = "Use your PH account genuinely (comment, upvote others) so it's established, not new"
+why = "Ranking weights engagement from established accounts; new-account voting is discounted/penalised."
+
+[[task]]
+id = "ph-coming-soon"
+day = -21
+channel = "producthunt"
+title = "Create PH 'coming soon' page and link it from the waitlist"
+
+[[task]]
+id = "ph-assets"
+day = -5
+channel = "producthunt"
+gate = true
+title = "PH listing ready: tagline <60 chars, gallery (demo first), maker first comment drafted"
+
+[[task]]
+id = "ph-launch"
+day = 0
+channel = "producthunt"
+title = "Launch at 12:01am PT; post maker comment; share 'we're live' (never 'upvote me')"
+why = "Coordinated voting is detected and penalised. Featured rate fell sharply post-2024; a good page is still not a guarantee."
+
+# ---------- HACKER NEWS ----------
+[[task]]
+id = "hn-eligibility"
+day = -7
+channel = "hn"
+gate = true
+title = "Confirm Show HN eligibility: people can try it now, no signup wall/landing page only"
+why = "showhn.html rules. Gated products get flagged off-topic."
+
+[[task]]
+id = "hn-first-comment"
+day = -3
+channel = "hn"
+title = "Draft first comment: backstory, how it's built, what feedback you want"
+
+[[task]]
+id = "hn-post"
+day = 1
+channel = "hn"
+title = "Post 'Show HN: <Name> – <plain description>' Tue-Thu US morning; no hype words, no vote asks"
+why = "Separate day from PH. First 60-90 min decide the front page. Alternative: an opinionated essay (Plausible)."
+
+# ---------- REDDIT ----------
+[[task]]
+id = "reddit-karma"
+day = -30
+channel = "reddit"
+title = "Pick 3-5 subs where users live; read each sub's rules; contribute genuine comments for 4 weeks"
+why = "Sub rules override 90/10; some cap promotion at 1/week. No history = removal or shadowban."
+
+[[task]]
+id = "reddit-posts"
+day = 3
+channel = "reddit"
+title = "Post in each sub in its native format, disclose you're the maker, stagger over days"
+
+# ---------- LINKEDIN (B2B) ----------
+[[task]]
+id = "linkedin-post"
+day = 0
+channel = "linkedin"
+title = "Founder story post (personal, not company page); link in first comment"
+
+# ---------- INDIE HACKERS ----------
+[[task]]
+id = "ih-milestone"
+day = 7
+channel = "indiehackers"
+title = "Post launch write-up with real numbers on Indie Hackers"
+why = "Low traffic but long-tail search + newsletter pickup (Tally, Plausible)."
+
+# ---------- DIRECTORIES ----------
+[[task]]
+id = "betalist"
+day = -21
+channel = "directories"
+title = "Submit to BetaList (free queue is weeks long; submit early)"
+
+[[task]]
+id = "directories-batch"
+day = 10
+channel = "directories"
+title = "One-afternoon batch: submit to 20-30 relevant directories / alternative-to sites"
+why = "Mostly SEO/backlinks, not users. Timebox it."
+
+# ---------- APP STORES ----------
+[[task]]
+id = "store-preorder"
+day = -30
+channel = "appstore"
+title = "Set up iOS pre-order / Google Play pre-registration"
+
+[[task]]
+id = "store-featuring"
+day = -21
+channel = "appstore"
+title = "Submit Apple 'Promote your app' featuring request (2+ weeks ahead)"
+
+[[task]]
+id = "store-listing"
+day = -7
+channel = "appstore"
+gate = true
+title = "Store listing final: screenshots, preview video, keywords, review approved"
+
+# ---------- LIFETIME DEAL (only as funding, never validation) ----------
+[[task]]
+id = "ltd-decision"
+day = 30
+channel = "ltd"
+title = "Decide LTD only after verdict: model support load and revenue split from the current contract"
+why = "LTD buyers are price-sensitive and support-heavy; AppSumo revenue reportedly falling 2024-25."
