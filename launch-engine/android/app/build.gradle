@@ -1,0 +1,27 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.vibpulse.launchengine'
+    compileSdk 34
+    defaultConfig {
+        // Never change: a new id installs as a different app and the old one's data is stranded.
+        applicationId 'com.vibpulse.launchengine'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    // The whole app is one bundled HTML file produced by ../../build.py.
+    sourceSets { main { assets.srcDirs = ['../../dist'] } }
+}
+
+// Always rebuild the bundle so the APK can never ship a stale or missing app.
+tasks.register('bundleWeb', Exec) {
+    workingDir '../..'
+    commandLine 'python3', 'build.py'
+}
+preBuild.dependsOn bundleWeb

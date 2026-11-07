@@ -15,6 +15,28 @@ python launch.py status                        # overdue + next 3 across ALL pro
 python test_launch.py                          # self-check
 ```
 
+## Standalone apps (offline, no hosting)
+
+| Platform | Get it | What it is |
+|---|---|---|
+| **Android** | Download `launch-engine.apk` from the `launch-engine` release, open it, and allow "Install unknown apps" | An offline app. It has no internet permission. Links open in your browser. |
+| **Windows** | Download `launch-engine-windows.zip`, extract it, and double-click `Install.cmd` | An Edge app window with its own profile and Desktop and Start menu shortcuts. It needs no admin rights. |
+
+CI builds both (`.github/workflows/launch-engine.yml`). To build them locally, run `python build.py` for `dist/launch-engine.html`, then `cd android && ./gradlew assembleDebug` (needs the Android SDK).
+
+**Set this up before the first phone install.** The APK must always be signed with the same key. Otherwise Android refuses updates, and uninstalling to get round that erases the app's data. Create a key once on your PC:
+```powershell
+keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("debug.keystore")) | Set-Clipboard
+```
+Paste the clipboard into GitHub → repo Settings → Secrets and variables → Actions as `ANDROID_DEBUG_KEYSTORE_B64`, and keep `debug.keystore` somewhere safe. Until that secret exists, CI builds the APK as a test artifact but won't publish it.
+
+**Data safety**
+- Data lives on each device.
+- The Command screen nags when your last backup is more than 7 days old.
+- Import and Reset can be undone from the ⋯ menu.
+- Older backups still import. Channels this build doesn't know are kept and the app warns you.
+
 ## Interactive app (Windows + Android)
 
 `app/` is an installable web app that works offline. It has:

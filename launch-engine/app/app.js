@@ -17,6 +17,12 @@ function save() {
   catch { toast('Could not save: storage is blocked or full. Export a backup now.'); }
 }
 const isBackup = (d) => d && typeof d.projects === 'object' && Array.isArray(d.seeded);
+const PREV_KEY = `${STORE_KEY}.prev`;
+// Import and Reset replace everything; keep one undo snapshot so a wrong file can't wipe the device.
+function snapshot() {
+  try { localStorage.setItem(PREV_KEY, JSON.stringify(state)); } catch { /* best effort */ }
+  document.getElementById('undo').hidden = false;
+}
 
 // Repo projects are added once; local edits and deletions are never overwritten by a repo refresh.
 function mergeSeed(seedProjects) {
@@ -39,6 +45,8 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 function download(name, text, type) {
+  // Android WebView can't follow blob downloads; the native shell exposes a save-as bridge instead.
+  if (window.AndroidBridge) { window.AndroidBridge.saveFile(name, text, type); return; }
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], { type }));
   a.download = name; a.click(); URL.revokeObjectURL(a.href);
@@ -90,7 +98,10 @@ function viewHome(today) {
   }).join('');
   const urgent = sums.flatMap(({ p, s }) => s.overdue.slice(0, 3).map((t) => ({ p, t })))
     .sort((a, b) => E.dueDate(a.p, a.t).localeCompare(E.dueDate(b.p, b.t))).slice(0, 8);
-  return `<h1>Command</h1>
+  const since = state.lastExport ? E.daysBetween(state.lastExport, today) : null;
+  const nag = since === null || since > 7
+    ? `<p class="badge warn" style="margin:0 0 14px">${since === null ? 'Never backed up on this device' : `Last backup ${since} days ago`}. ⋯ → Export backup.</p>` : '';
+  return `${nag}<h1>Command</h1>
     <p class="lede">Every launch, one screen. Today is ${esc(today)} (${esc(E.weekday(today))}).</p>
     <section class="kpis" aria-label="Portfolio totals">
       <div class="kpi"><b>${ps.length}</b><span>projects</span></div>
@@ -328,26 +339,43 @@ function planMarkdown(p) {
 }
 
 // ---------- data menu ----------
-document.getElementById('export').onclick = () =>
-  download(`launch-engine-${E.todayIso()}.json`, JSON.stringify(state, null, 2), 'application/json');
+document.getElementById('export').onclick = () => {
+  state.lastExport = E.todayIso(); save();
+  download(`launch-engine-${E.todayIso()}.json`, JSON.stringify({ schemaVersion: 1, ...state }, null, 2), 'application/json');
+  render();
+};
 const fileInput = document.getElementById('import-file');
 document.getElementById('import').onclick = () => fileInput.click();
 fileInput.onchange = async () => {
   try {
     const data = JSON.parse(await fileInput.files[0].text());
     if (!isBackup(data)) throw new Error('Not a Launch Engine backup.');
+    // Hard errors reject the file; channels unknown to this build are kept (ignored by plans) so old backups still load.
+    const warnings = [];
     for (const p of Object.values(data.projects)) {
       const errs = E.validateProject(p, TASKS);
-      if (errs.length) throw new Error(`${p.slug}: ${errs.join(', ')}`);
+      const hard = errs.filter((e) => !e.startsWith('unknown channel'));
+      if (hard.length) throw new Error(`${p.slug}: ${hard.join(', ')}`);
+      if (errs.length > hard.length) warnings.push(p.slug);
     }
-    state = data; save(); render(); toast('Backup imported');
+    snapshot();
+    delete data.schemaVersion;
+    state = data; save(); render();
+    toast(warnings.length ? `Imported. Unknown channels kept in: ${warnings.join(', ')}` : 'Backup imported');
   } catch (err) { toast(`Import failed: ${err.message}`); }
   fileInput.value = '';
 };
 document.getElementById('reset').onclick = async () => {
   if (!confirm('Replace all projects on this device with the repo data? Export a backup first if unsure.')) return;
+  snapshot();
   state = { projects: {}, seeded: [] };
   mergeSeed((await fetchData()).projects); save(); render(); toast('Reset to repo data');
+};
+document.getElementById('undo').onclick = () => {
+  const prev = (() => { try { return JSON.parse(localStorage.getItem(PREV_KEY)); } catch { return null; } })();
+  if (!isBackup(prev)) { toast('Nothing to undo'); return; }
+  state = prev; save(); localStorage.removeItem(PREV_KEY);
+  document.getElementById('undo').hidden = true; render(); toast('Restored the previous data');
 };
 
 let installPrompt;
@@ -359,6 +387,7 @@ document.getElementById('install').onclick = () => installPrompt?.prompt();
 
 // ---------- boot ----------
 async function fetchData() {
+  if (window.LAUNCH_DATA) return window.LAUNCH_DATA; // standalone build: library is inlined, no server needed
   const res = await fetch('data.json', { cache: 'no-cache' });
   if (!res.ok) throw new Error(`data.json: HTTP ${res.status}`);
   return res.json();
@@ -370,6 +399,8 @@ async function fetchData() {
     TASKS = data.tasks;
     CHANNELS = [...new Set(TASKS.map((t) => t.channel))];
     state = loadLocal() || state;
+    document.getElementById('undo').hidden = !localStorage.getItem(PREV_KEY);
+    document.getElementById('version').textContent = `Build ${window.LAUNCH_VERSION || 'dev'} · ${TASKS.length} tasks`;
     mergeSeed(data.projects);
     save();
     addEventListener('hashchange', () => { render(); main.focus({ preventScroll: true }); scrollTo(0, 0); });

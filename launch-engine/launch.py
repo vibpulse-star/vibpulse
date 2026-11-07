@@ -238,7 +238,7 @@ def cmdExport(args):
             projects.append(validateManifest(readToml(path), tasks, path.name))
         except (ValueError, tomllib.TOMLDecodeError) as e:
             print(f"SKIP {path.name}: {e}")
-    data = {"generated": dt.date.today().isoformat(), "tasks": tasks, "projects": projects}
+    data = {"tasks": tasks, "projects": projects}  # deterministic: CI checks the committed copy is current
     APP_DATA.write_text(json.dumps(data, indent=1, default=str), encoding="utf-8")
     print(f"Wrote {APP_DATA}: {len(tasks)} tasks, {len(projects)} projects")
 

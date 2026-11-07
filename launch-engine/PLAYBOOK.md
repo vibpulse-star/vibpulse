@@ -74,3 +74,21 @@ Rejected:
 - Raycast PH history: https://hunted.space/dashboard/raycast/launches/raycast-1-0
 
 Gaps: the PH algorithm claims come from third-party blogs, the AppSumo revenue split varies by contract, and Apple's featuring process wasn't verified against Apple's docs.
+
+## Council review: standalone packaging (2026-11-07)
+
+Pathfinder (cross-platform), Skeptic (data loss) and Strategist (scope) reviewed the plan: a single-file HTML build, an Android WebView APK and a Windows Edge app shortcut.
+
+**Adopted**
+- **Android save bridge:** a native save-as bridge with `ACTION_CREATE_DOCUMENT`, so exports work in a WebView. Pending text is written to disk first, so it survives process death.
+- **Android import picker:** uses `ACTION_OPEN_DOCUMENT` with type `*/*`, and cancel is handled so the picker never gets stuck.
+- **Android settings:** `configChanges` so rotation doesn't reload the page. No INTERNET permission. File access from file:// URLs is disabled, and external links open in the browser.
+- **Signing key:** the APK is published only with a stable signing key, because a key change forces an uninstall that erases data.
+- **Windows:** a dedicated Edge profile in `--user-data-dir`, a fixed install path, a URI-encoded path, and a fallback when Edge is missing.
+- **Backups:** older backups import with warnings for unknown channels, Import and Reset can be undone, and the app nags after 7 days without a backup.
+- **Build checks:** the build fails if an ES `import` survives bundling or `</` appears raw in an inline script. The build version is shown in the menu.
+
+**Rejected**
+- **Hosted PWA only (Strategist):** the owner asked for standalone, and hosting would publish project data unless the host is private. The PWA still works for anyone who hosts it.
+- **Electron or Tauri:** about 100 MB and a native toolchain, for no capability this needs.
+- **Gist-based sync:** deferred until manual backup actually hurts.
