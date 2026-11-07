@@ -1,0 +1,19 @@
+# Launch manifest. One per project. Copy happens via: python launch.py new <slug> --date YYYY-MM-DD
+slug = "__SLUG__"
+name = ""
+launch_date = __DATE__          # TOML date, no quotes
+url = ""
+one_liner = ""                  # "<Product> helps <audience> <outcome> without <pain>." Under 60 chars for PH tagline.
+audience = ""                   # One specific person, not a market. "Solo Shopify sellers doing <$10k/mo"
+category = ""                   # The category you want to be compared in (April Dunford)
+
+# Success is decided BEFORE launch, not rationalised after.
+success_metric = ""             # e.g. "paying customers", "activated signups", "MRR GBP"
+success_target = ""             # e.g. "25 by T+30"
+kill_threshold = ""             # below this at T+30 => pivot/kill. e.g. "5 paying"
+
+# Opt-in channels. "core" is always included. See tasks.toml for every channel id.
+channels = ["email", "x", "producthunt", "hn", "reddit", "directories"]
+
+# Completed task ids. Keep on ONE line (launch.py done edits it).
+done = []
