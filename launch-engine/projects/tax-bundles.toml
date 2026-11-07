@@ -1,0 +1,22 @@
+# Source: products/ on branch ccr-95590ecc-o2ezwx. MTD Duo £19.99, Etsy Seller Tax Kit £16.99. Launch after both components are live. Only 2 bundle covers exist: mk-images is not done.
+slug = "tax-bundles"
+kind = "digital"
+name = "MTD Duo + Etsy Seller Tax Kit bundles"
+launch_date = 2026-12-08
+url = ""
+one_liner = "Two-tracker bundles at a discount to buying separately"
+audience = "Buyers of the single trackers; sellers who are also sole traders"
+category = "UK self-assessment spreadsheet bundles"
+success_metric = "bundle sales"
+success_target = "10 by T+30 (PROPOSED - confirm)"
+kill_threshold = "2 (PROPOSED - confirm)"
+channels = ["marketplace"]
+done = ["positioning", "mk-seo"]
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

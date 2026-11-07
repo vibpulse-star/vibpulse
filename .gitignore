@@ -1,0 +1,6 @@
+launch-engine/projects/*.plan.md
+__pycache__/
+launch-engine/dist/
+launch-engine/android/.gradle/
+launch-engine/android/app/build/
+launch-engine/android/build/

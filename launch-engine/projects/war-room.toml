@@ -1,0 +1,22 @@
+# Three implementations exist: Next.js route (ccr-35b9a00d-dsor9b), static PWA (three-cross-platform-apps-q4ve6h), React agent OS (focused-carson-htx0fp). int-pick-one decides.
+slug = "war-room"
+kind = "internal"
+name = "War Room"
+launch_date = 2026-12-01
+url = ""
+one_liner = "Daily mission, priorities, MRR and gap alerts in one screen"
+audience = "Iain (owner)"
+category = "internal tool"
+success_metric = "days used per week"
+success_target = "5 of 7"
+kill_threshold = "2 of 7"
+channels = []
+done = []
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""

@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+"""Launch Engine: one task library, one manifest per project, dated plans and go/no-go gates.
+
+Usage:
+  python launch.py new <slug> --date YYYY-MM-DD   create projects/<slug>.toml from the template
+  python launch.py plan <slug>                    write projects/<slug>.plan.md (dated checklist)
+  python launch.py done <slug> <task_id>...       mark tasks complete
+  python launch.py gate <slug>                    go/no-go check; exit 1 if blocked
+  python launch.py status                         overdue + next-up across ALL projects
+  python launch.py export                         write app/data.json for the interactive app
+Stdlib only (Python 3.11+), runs the same on Windows and Linux.
+"""
+import argparse
+import json
+import datetime as dt
+import re
+import sys
+import tomllib
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+PROJECTS = ROOT / "projects"
+TASKS_FILE = ROOT / "tasks.toml"
+TEMPLATE_FILE = ROOT / "template.toml"
+REQUIRED_FIELDS = ("name", "one_liner", "audience", "url", "success_metric", "success_target", "kill_threshold")
+NUMERIC_FIELDS = ("success_target", "kill_threshold")
+WEEKDAY_TASKS = ("ph-launch", "hn-post")  # must land Tue-Thu
+MIN_LEAD_DAYS = 60
+COLLISION_DAYS = 14
+SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+KINDS = ("saas", "digital", "internal")
+BASE_CHANNEL = {"saas": "core", "digital": "core", "internal": "internal"}
+APP_DATA = ROOT / "app" / "data.json"
+
+
+def readToml(path):
+    # utf-8-sig: PowerShell 5 and some Windows editors write a BOM that tomllib rejects.
+    return tomllib.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def loadTasks():
+    return readToml(TASKS_FILE)["task"]
+
+
+def validateManifest(manifest, tasks, source):
+    """Raise ValueError on anything that would make the plan or gate silently wrong."""
+    if type(manifest.get("launch_date")) is not dt.date:
+        raise ValueError(f"{source}: launch_date must be an unquoted TOML date like 2026-12-08")
+    if manifest.get("kind", "saas") not in KINDS:
+        raise ValueError(f"{source}: kind must be one of {KINDS}")
+    channels = manifest.get("channels", [])
+    if not isinstance(channels, list):
+        raise ValueError(f"{source}: channels must be a list, e.g. [\"email\", \"hn\"]")
+    known = {t["channel"] for t in tasks}
+    unknown = [c for c in channels if c not in known]
+    if unknown:
+        raise ValueError(f"{source}: unknown channel(s) {unknown}; valid: {sorted(known - {'core'})}")
+    return manifest
+
+
+def loadManifest(slug, tasks):
+    path = PROJECTS / f"{slug}.toml"
+    if not path.exists():
+        sys.exit(f"No manifest: {path}. Run: python launch.py new {slug} --date YYYY-MM-DD")
+    try:
+        return validateManifest(readToml(path), tasks, path.name)
+    except (ValueError, tomllib.TOMLDecodeError) as e:
+        sys.exit(f"Invalid manifest: {e}")
+
+
+def selectTasks(tasks, channels, kind="saas"):
+    """Base channel for the kind plus every opted-in channel, minus tasks scoped to other kinds; sorted by day."""
+    wanted = {BASE_CHANNEL[kind], *channels}
+    picked = (t for t in tasks if t["channel"] in wanted and kind in t.get("kinds", KINDS))
+    return sorted(picked, key=lambda t: (t["day"], t["id"]))
+
+
+def selectProjectTasks(tasks, manifest):
+    return selectTasks(tasks, manifest["channels"], manifest.get("kind", "saas"))
+
+
+def computeDue(launch_date, task):
+    return launch_date + dt.timedelta(days=task["day"])
+
+
+def findMissingFields(manifest):
+    missing = [f for f in REQUIRED_FIELDS if not str(manifest.get(f, "")).strip()]
+    vague = [f"{f} (needs a number)" for f in NUMERIC_FIELDS if f not in missing and not re.search(r"\d", str(manifest[f]))]
+    return missing + vague
+
+
+def findBlockingGates(manifest, tasks):
+    done = set(manifest.get("done", []))
+    return [t for t in selectProjectTasks(tasks, manifest) if t.get("gate") and t["day"] <= 0 and t["id"] not in done]
+
+
+def findWeekdayWarnings(manifest, tasks):
+    out = []
+    for t in selectProjectTasks(tasks, manifest):
+        due = computeDue(manifest["launch_date"], t)
+        if t["id"] in WEEKDAY_TASKS and due.weekday() not in (1, 2, 3):
+            out.append(f"{t['id']} falls on {due:%A} {due}; move launch_date so it lands Tue-Thu")
+    return out
+
+
+def findCollisions(slug, manifest):
+    """Other saas launches within COLLISION_DAYS: one founder can't staff two launch days (listings/internal don't need it)."""
+    out = []
+    if manifest.get("kind", "saas") != "saas":
+        return out
+    for path in PROJECTS.glob("*.toml"):
+        if path.stem == slug:
+            continue
+        try:
+            other_m = readToml(path)
+        except tomllib.TOMLDecodeError:
+            continue
+        if other_m.get("kind", "saas") != "saas":
+            continue
+        other = other_m.get("launch_date")
+        if type(other) is dt.date and abs((other - manifest["launch_date"]).days) <= COLLISION_DAYS:
+            out.append(f"{path.stem} launches {other}, within {COLLISION_DAYS} days")
+    return out
+
+
+def renderPlan(manifest, tasks):
+    done = set(manifest.get("done", []))
+    launch = manifest["launch_date"]
+    lines = [f"# Launch plan: {manifest['name']}", "",
+             f"Launch day: **{launch} ({launch:%A})**. Success = {manifest['success_metric']} >= {manifest['success_target']}. "
+             f"Kill/pivot if below {manifest['kill_threshold']} by T+30.", "",
+             "Generated by `launch.py plan`. Edit the manifest, not this file.", ""]
+    lines += [f"> WARNING: {w}" for w in findWeekdayWarnings(manifest, tasks)]
+    phase = None
+    for t in selectProjectTasks(tasks, manifest):
+        current = "Pre-launch" if t["day"] < 0 else "Launch day" if t["day"] == 0 else "Post-launch"
+        if current != phase:
+            lines += ["", f"## {current}", ""]
+            phase = current
+        box = "x" if t["id"] in done else " "
+        gate = " **[GATE]**" if t.get("gate") else ""
+        lines.append(f"- [{box}] `{computeDue(launch, t)}` (T{t['day']:+d}) [{t['channel']}] {t['title']}{gate} (`{t['id']}`)")
+        if t.get("why"):
+            lines.append(f"  - why: {t['why']}")
+    return "\n".join(lines) + "\n"
+
+
+def cmdNew(args):
+    if not SLUG_RE.match(args.slug):
+        sys.exit("Slug must be lowercase letters, digits and dashes, e.g. my-app")
+    launch = dt.date.fromisoformat(args.date)  # validate before writing
+    PROJECTS.mkdir(exist_ok=True)
+    path = PROJECTS / f"{args.slug}.toml"
+    if path.exists():
+        sys.exit(f"Refusing to overwrite existing {path}")
+    text = TEMPLATE_FILE.read_text(encoding="utf-8-sig").replace("__SLUG__", args.slug).replace("__DATE__", args.date)
+    path.write_text(text, encoding="utf-8")
+    print(f"Created {path}. Fill the required fields, then: python launch.py plan {args.slug}")
+    lead = (launch - dt.date.today()).days
+    if lead < MIN_LEAD_DAYS:
+        print(f"WARNING: launch is {lead} days away; audience tasks start at T-{MIN_LEAD_DAYS} and will already be overdue.")
+
+
+def cmdPlan(args):
+    tasks = loadTasks()
+    manifest = loadManifest(args.slug, tasks)
+    out = PROJECTS / f"{args.slug}.plan.md"
+    out.write_text(renderPlan(manifest, tasks), encoding="utf-8")
+    print(f"Wrote {out}")
+
+
+def cmdDone(args):
+    tasks = loadTasks()
+    path = PROJECTS / f"{args.slug}.toml"
+    manifest = loadManifest(args.slug, tasks)
+    unknown = [i for i in args.task_ids if i not in {t["id"] for t in tasks}]
+    if unknown:
+        sys.exit(f"Unknown task id(s): {', '.join(unknown)}")
+    done = list(dict.fromkeys([*manifest.get("done", []), *args.task_ids]))
+    new_list = "done = [" + ", ".join(f'"{i}"' for i in done) + "]"
+    text = path.read_text(encoding="utf-8-sig")
+    # shortcut: assumes the done list stays on one line (template guarantees it); trailing comments are kept.
+    text, n = re.subn(r"^done\s*=\s*\[[^\]\n]*\]", lambda _: new_list, text, count=1, flags=re.M)
+    if n != 1:
+        sys.exit(f"Could not find a single-line `done = [...]` in {path}")
+    path.write_text(text, encoding="utf-8")
+    print(f"{args.slug}: {len(done)} task(s) done")
+
+
+def cmdGate(args):
+    tasks = loadTasks()
+    manifest = loadManifest(args.slug, tasks)
+    missing = findMissingFields(manifest)
+    blocking = findBlockingGates(manifest, tasks)
+    for w in findWeekdayWarnings(manifest, tasks) + findCollisions(args.slug, manifest):
+        print(f"WARNING  {w}")
+    for f in missing:
+        print(f"BLOCKED  manifest field: {f}")
+    for t in blocking:
+        print(f"BLOCKED  gate not done: {t['id']}: {t['title']}")
+    if missing or blocking:
+        sys.exit(f"NO-GO: {len(missing) + len(blocking)} blocker(s)")
+    print("GO: all gates passed")
+
+
+def cmdStatus(args):
+    today = dt.date.fromisoformat(args.today) if args.today else dt.date.today()
+    tasks = loadTasks()
+    manifests = sorted(PROJECTS.glob("*.toml"))
+    if not manifests:
+        print("No projects yet. Run: python launch.py new <slug> --date YYYY-MM-DD")
+    for path in manifests:
+        try:  # one broken manifest must not hide every other project
+            m = validateManifest(readToml(path), tasks, path.name)
+        except (ValueError, tomllib.TOMLDecodeError) as e:
+            print(f"\nSKIP {path.name}: {e}")
+            continue
+        done = set(m.get("done", []))
+        open_tasks = [t for t in selectProjectTasks(tasks, m) if t["id"] not in done]
+        overdue = [t for t in open_tasks if computeDue(m["launch_date"], t) < today]
+        upcoming = [t for t in open_tasks if computeDue(m["launch_date"], t) >= today][:3]
+        delta = (m["launch_date"] - today).days
+        r = m.get("results", {})
+        results = f", {m.get('success_metric', 'metric')} {r.get('metric_value', 0)} / target {m.get('success_target', '?')}" if r else ""
+        print(f"\n{m.get('name') or path.stem} ({path.stem}): launch {m['launch_date']} (T{-delta:+d}), {len(overdue)} overdue{results}")
+        for t in overdue[:5]:
+            print(f"  OVERDUE {computeDue(m['launch_date'], t)}  {t['id']}: {t['title']}")
+        for t in upcoming:
+            print(f"  next    {computeDue(m['launch_date'], t)}  {t['id']}: {t['title']}")
+
+
+def cmdExport(args):
+    """Bundle the task library + every valid manifest for the browser app (dates as ISO strings)."""
+    tasks = loadTasks()
+    projects = []
+    for path in sorted(PROJECTS.glob("*.toml")):
+        try:
+            projects.append(validateManifest(readToml(path), tasks, path.name))
+        except (ValueError, tomllib.TOMLDecodeError) as e:
+            print(f"SKIP {path.name}: {e}")
+    data = {"tasks": tasks, "projects": projects}  # deterministic: CI checks the committed copy is current
+    APP_DATA.write_text(json.dumps(data, indent=1, default=str), encoding="utf-8")
+    print(f"Wrote {APP_DATA}: {len(tasks)} tasks, {len(projects)} projects")
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description="Launch Engine")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    s = sub.add_parser("new"); s.add_argument("slug"); s.add_argument("--date", required=True); s.set_defaults(fn=cmdNew)
+    s = sub.add_parser("plan"); s.add_argument("slug"); s.set_defaults(fn=cmdPlan)
+    s = sub.add_parser("done"); s.add_argument("slug"); s.add_argument("task_ids", nargs="+"); s.set_defaults(fn=cmdDone)
+    s = sub.add_parser("gate"); s.add_argument("slug"); s.set_defaults(fn=cmdGate)
+    s = sub.add_parser("export"); s.set_defaults(fn=cmdExport)
+    s = sub.add_parser("status"); s.add_argument("--today", help="override date (YYYY-MM-DD)"); s.set_defaults(fn=cmdStatus)
+    args = p.parse_args(argv)
+    args.fn(args)
+
+
+if __name__ == "__main__":
+    main()

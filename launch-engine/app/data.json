@@ -1,0 +1,734 @@
+{
+ "tasks": [
+  {
+   "id": "positioning",
+   "day": -60,
+   "channel": "core",
+   "gate": true,
+   "title": "Write Dunford positioning: alternatives, unique attributes, value, best-fit customer, category",
+   "why": "Every channel's copy derives from this; skipping it produces hype titles that HN/Reddit punish."
+  },
+  {
+   "id": "success-criteria",
+   "day": -60,
+   "channel": "core",
+   "gate": true,
+   "title": "Fix success_metric, success_target and kill_threshold (with numbers) in the manifest",
+   "why": "Decide what 'worked' means before launch-day dopamine. Rank is vanity; activation and revenue are not."
+  },
+  {
+   "id": "presell",
+   "day": -21,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Get 3+ paid pre-orders/deposits or signed LOIs from the target audience at the planned price",
+   "why": "Waitlists prove interest, not willingness to pay. Revenue before launch is the only real validation."
+  },
+  {
+   "id": "beta-users",
+   "day": -28,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Recruit 5-10 beta users from the target audience; onboard them personally",
+   "why": "Superhuman pattern: onboarding is research. Finds the top friction before strangers do."
+  },
+  {
+   "id": "social-proof",
+   "day": -10,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Collect 3-5 named testimonials (photo, role, concrete outcome) from beta users; add to landing + pricing",
+   "why": "Cold launch traffic has no reason to trust you; outcome-specific quotes lift signup and checkout conversion."
+  },
+  {
+   "id": "legal-basics",
+   "day": -14,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Privacy policy, terms, refund policy live; cookie consent if non-essential tracking; VAT via merchant of record (Paddle/Lemon Squeezy) or Stripe Tax",
+   "why": "UK GDPR/PECR and EU VAT apply from the first EU/UK sale or email. Not legal advice; check your jurisdiction."
+  },
+  {
+   "id": "self-serve",
+   "day": -10,
+   "channel": "core",
+   "gate": true,
+   "kinds": [
+    "saas"
+   ],
+   "title": "Stranger test: someone unaided reaches first value in <5 min, no signup wall before value where possible",
+   "why": "PostHog launched only once strangers could self-serve; Show HN rejects signup-gated products."
+  },
+  {
+   "id": "analytics",
+   "day": -10,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Instrument signup, activation event and payment; UTM per channel; verify events fire",
+   "why": "Without per-channel attribution you cannot tell which channel to repeat next launch."
+  },
+  {
+   "id": "payments",
+   "day": -10,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Pricing page live; checkout works end to end (real card, then refund)",
+   "why": "Levels: charge from day one. Launch traffic that can't pay is wasted traffic."
+  },
+  {
+   "id": "launch-offer",
+   "day": -7,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Founding-member offer (e.g. 30% off annual) with a REAL deadline at T+7; shown on pricing, PH, HN, email",
+   "why": "Converts the ~72h spike into revenue; annual = upfront cash + lower churn. Never fake the deadline."
+  },
+  {
+   "id": "share-loop",
+   "day": -7,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Add an invite/share prompt right after the activation moment (2 taps, good OG preview, two-sided reward if fits)",
+   "why": "Turns each activated signup into a channel. Track invites sent/accepted per activated user."
+  },
+  {
+   "id": "demo-asset",
+   "day": -7,
+   "channel": "core",
+   "gate": true,
+   "title": "Record 30-60s demo video/GIF showing the core outcome, plus 3-5 screenshots",
+   "why": "Reused across PH gallery, HN first comment, X, Reddit, email. One asset, every channel."
+  },
+  {
+   "id": "activation-emails",
+   "day": -5,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "3-email drip keyed to the activation event: welcome+first step (0h), nudge if not activated (24h), use case+offer (72h)",
+   "why": "Most launch signups never activate; personal-followup can't scale past ~50 people."
+  },
+  {
+   "id": "load-check",
+   "day": -3,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Smoke-test production under a burst (signup, core flow, payment); error alerting on",
+   "why": "A spike that hits a broken signup is unrecoverable; it decays in ~72h."
+  },
+  {
+   "id": "launch-day-block",
+   "day": -1,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "gate": true,
+   "title": "Clear the calendar for 12+ hours on T0 to reply to every comment",
+   "why": "The comment thread IS the launch on PH and HN; sustained engagement beats one spike."
+  },
+  {
+   "id": "reply-all",
+   "day": 0,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Reply to every comment, DM and email within the hour, all day"
+  },
+  {
+   "id": "fix-top3",
+   "day": 2,
+   "channel": "core",
+   "title": "Ship fixes for the top 3 complaints from launch feedback; reply in-thread when fixed"
+  },
+  {
+   "id": "personal-followup",
+   "day": 3,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Personally email signups who didn't activate (or the top 50); ask what blocked them"
+  },
+  {
+   "id": "upgrade-nudge",
+   "day": 5,
+   "channel": "core",
+   "kinds": [
+    "saas"
+   ],
+   "title": "Email activated free users a direct upgrade offer referencing the launch-offer deadline"
+  },
+  {
+   "id": "metrics-d7",
+   "day": 7,
+   "channel": "core",
+   "title": "Fill the manifest [results] table: signups, activated, paying, mrr, top_channel"
+  },
+  {
+   "id": "review-capture",
+   "day": 10,
+   "channel": "core",
+   "title": "Ask activated/paying users for a review (PH, G2/Capterra or store) and a reusable quote",
+   "why": "Social proof banked now makes the next launch convert better."
+  },
+  {
+   "id": "retro",
+   "day": 14,
+   "channel": "core",
+   "title": "Retro: which channel produced paying users? Edit tasks.toml with the lessons",
+   "why": "Supabase runs a retro after every launch week. This is how the engine compounds across projects."
+  },
+  {
+   "id": "seo-compound",
+   "day": 14,
+   "channel": "core",
+   "title": "Publish launch post-mortem + 3 '<competitor> alternative' / comparison pages; link from directory listings",
+   "why": "Launch traffic decays to zero; search traffic compounds. 'X alternative' intent converts (Cal.com)."
+  },
+  {
+   "id": "verdict",
+   "day": 30,
+   "channel": "core",
+   "title": "T+30 verdict: update [results], compare to success_target / kill_threshold: double down, pivot or kill"
+  },
+  {
+   "id": "next-launch",
+   "day": 30,
+   "channel": "core",
+   "title": "If double down: schedule next launch (v2/integration/platform) + new manifest. If kill: archive manifest, move hours to top-revenue project",
+   "why": "Tally 2.0 relaunch: +91% weekly signups. But relaunching a killed product wastes the slot."
+  },
+  {
+   "id": "pmf-survey",
+   "day": -14,
+   "channel": "validation",
+   "title": "Run Sean Ellis survey on beta users ('very disappointed' %); record the score",
+   "why": "Superhuman held its gate until ~40% very disappointed. Below that, a launch amplifies a leaky product."
+  },
+  {
+   "id": "waitlist-page",
+   "day": -60,
+   "channel": "email",
+   "gate": true,
+   "title": "Waitlist page live: one-line positioning, email capture with explicit consent text + privacy link, double opt-in",
+   "why": "Most dependable launch-day asset (Tally's 500-1,500 community seeded its PH #1). Consent makes it legally sendable."
+  },
+  {
+   "id": "waitlist-updates",
+   "day": -45,
+   "channel": "email",
+   "title": "Send a build update to the waitlist every 1-2 weeks (progress, screenshot, one question)"
+  },
+  {
+   "id": "launch-email-draft",
+   "day": -3,
+   "channel": "email",
+   "title": "Draft launch email: what it does, link to YOUR site (UTM), one ask (try it). Unsubscribe link. Never 'please upvote'",
+   "why": "Sending a burst of list members straight to the PH/HN page looks like a vote ring."
+  },
+  {
+   "id": "launch-email-send",
+   "day": 0,
+   "channel": "email",
+   "title": "Send launch email to opted-in subscribers only"
+  },
+  {
+   "id": "shipped-email",
+   "day": 7,
+   "channel": "email",
+   "title": "Email launch signups 'you asked, we shipped': top-3 fixes + last-day offer reminder"
+  },
+  {
+   "id": "bip-start",
+   "day": -60,
+   "channel": "twitter",
+   "title": "Start build-in-public posts 3x/week: progress, numbers, failures",
+   "why": "X only works on an existing audience (Levels: >50% of Photo AI traffic from X). 30 days is too short to build one."
+  },
+  {
+   "id": "supporter-dms",
+   "day": -2,
+   "channel": "twitter",
+   "title": "DM 20-50 genuine supporters: 'launching <date>, would love your feedback' with a link to your site. No vote asks"
+  },
+  {
+   "id": "x-launch-thread",
+   "day": 0,
+   "channel": "twitter",
+   "title": "Post launch thread: problem, demo video, link, story"
+  },
+  {
+   "id": "x-numbers-post",
+   "day": 7,
+   "channel": "twitter",
+   "title": "Post launch numbers transparently (traffic, signups, revenue, what failed)"
+  },
+  {
+   "id": "ph-account-warm",
+   "day": -60,
+   "channel": "producthunt",
+   "title": "Use your PH account genuinely (comment, upvote others) so it's established, not new",
+   "why": "Ranking weights engagement from established accounts; new-account voting is discounted/penalised."
+  },
+  {
+   "id": "ph-coming-soon",
+   "day": -21,
+   "channel": "producthunt",
+   "title": "Create PH 'coming soon' page and link it from the waitlist"
+  },
+  {
+   "id": "ph-assets",
+   "day": -5,
+   "channel": "producthunt",
+   "gate": true,
+   "title": "PH listing ready: tagline <60 chars, gallery (demo first), maker first comment drafted"
+  },
+  {
+   "id": "ph-launch",
+   "day": 0,
+   "channel": "producthunt",
+   "title": "Launch 12:01am PT (Tue-Thu); post maker comment; share 'we're live' (never 'upvote me')",
+   "why": "Coordinated voting is detected and penalised. Featured rate fell sharply post-2024."
+  },
+  {
+   "id": "hn-eligibility",
+   "day": -7,
+   "channel": "hn",
+   "gate": true,
+   "title": "Confirm Show HN eligibility: people can try it now, no signup wall / landing page only",
+   "why": "showhn.html rules. Gated products get flagged off-topic."
+  },
+  {
+   "id": "hn-first-comment",
+   "day": -3,
+   "channel": "hn",
+   "title": "Draft first comment: backstory, how it's built, what feedback you want"
+  },
+  {
+   "id": "hn-post",
+   "day": 1,
+   "channel": "hn",
+   "title": "Post 'Show HN: <Name> \u2013 <plain description>' Tue-Thu US morning; no hype, no vote asks, don't share the HN link",
+   "why": "Separate day from PH. First 60-90 min decide the front page. Alternative: an opinionated essay (Plausible)."
+  },
+  {
+   "id": "reddit-karma",
+   "day": -60,
+   "channel": "reddit",
+   "gate": true,
+   "title": "Pick 3-5 subs where users live; read each sub's rules; contribute genuine comments for 4+ weeks",
+   "why": "Sub rules override 90/10; some cap promotion at 1/week. No history = removal or shadowban."
+  },
+  {
+   "id": "reddit-posts",
+   "day": 3,
+   "channel": "reddit",
+   "title": "Post max 1-2 subs/day, each a distinct native-format post (no cross-post spam), disclose you're the maker"
+  },
+  {
+   "id": "linkedin-post",
+   "day": 0,
+   "channel": "linkedin",
+   "title": "Founder story post (personal, not company page); link in first comment"
+  },
+  {
+   "id": "ih-milestone",
+   "day": 7,
+   "channel": "indiehackers",
+   "title": "Post launch write-up with real numbers on Indie Hackers",
+   "why": "Low traffic but long-tail search + newsletter pickup (Tally, Plausible)."
+  },
+  {
+   "id": "betalist",
+   "day": -45,
+   "channel": "directories",
+   "title": "Submit to BetaList (free queue is weeks long; submit early)"
+  },
+  {
+   "id": "directories-batch",
+   "day": 10,
+   "channel": "directories",
+   "title": "One-afternoon batch: submit to 20-30 relevant directories / alternative-to sites",
+   "why": "Mostly SEO/backlinks, not users. Timebox it."
+  },
+  {
+   "id": "play-closed-test",
+   "day": -35,
+   "channel": "play",
+   "gate": true,
+   "title": "Google Play closed test with the required opted-in testers for the required consecutive days; production access approved",
+   "why": "New personal Play accounts must pass a closed test before production (was 12 testers x 14 days; verify current rule)."
+  },
+  {
+   "id": "play-preregister",
+   "day": -30,
+   "channel": "play",
+   "title": "Enable Google Play pre-registration"
+  },
+  {
+   "id": "play-listing",
+   "day": -7,
+   "channel": "play",
+   "gate": true,
+   "title": "Play listing final: screenshots, feature graphic, preview video, short/long description keywords, data safety form"
+  },
+  {
+   "id": "ios-preorder",
+   "day": -30,
+   "channel": "ios",
+   "title": "Set up iOS pre-order (up to 180 days ahead)"
+  },
+  {
+   "id": "ios-featuring",
+   "day": -21,
+   "channel": "ios",
+   "title": "Submit Apple 'Promote your app' featuring request (2+ weeks ahead)"
+  },
+  {
+   "id": "ios-listing",
+   "day": -7,
+   "channel": "ios",
+   "gate": true,
+   "title": "App Store listing final: screenshots, preview video, keywords, review approved"
+  },
+  {
+   "id": "ltd-decision",
+   "day": 30,
+   "channel": "ltd",
+   "title": "Only after a 'double down' verdict: model LTD support load and revenue split from the current contract",
+   "why": "LTD buyers are price-sensitive and support-heavy; AppSumo revenue reportedly falling 2024-25."
+  },
+  {
+   "id": "mk-seo",
+   "day": -14,
+   "channel": "marketplace",
+   "gate": true,
+   "title": "Etsy SEO: title <=140 chars front-loading buyer search terms, all 13 tags used (<=20 chars, multi-word), attributes filled",
+   "why": "Etsy search is the launch channel for digital products; empty tags and attributes are lost impressions."
+  },
+  {
+   "id": "mk-images",
+   "day": -10,
+   "channel": "marketplace",
+   "gate": true,
+   "title": "8-10 listing images (2000px), image 1 readable as a thumbnail; add a 5-15s listing video"
+  },
+  {
+   "id": "mk-file-test",
+   "day": -5,
+   "channel": "marketplace",
+   "gate": true,
+   "title": "Buyer test: download the delivered files, open in Excel, Google Sheets and Numbers on PC and phone; run verify.py",
+   "why": "One 'file doesn't work' review at launch tanks conversion for months."
+  },
+  {
+   "id": "mk-payhip",
+   "day": -3,
+   "channel": "marketplace",
+   "title": "Mirror the listing on Payhip (own customer emails, lower fees); link it from your bio and emails",
+   "why": "Etsy owns the customer; Payhip lets you build the list the next launch needs."
+  },
+  {
+   "id": "mk-publish",
+   "day": 0,
+   "channel": "marketplace",
+   "title": "Publish at the launch price; pin the hero image to Pinterest with the listing link"
+  },
+  {
+   "id": "mk-first-reviews",
+   "day": 7,
+   "channel": "marketplace",
+   "title": "Thank every buyer in a message and ask for an honest review. Never offer an incentive (Etsy policy)",
+   "why": "Early reviews drive Etsy ranking; incentivised reviews breach Etsy's policy."
+  },
+  {
+   "id": "mk-ads-test",
+   "day": 7,
+   "channel": "marketplace",
+   "title": "Etsy Ads test: small daily budget for 14 days; keep only listings whose ads return more than they cost"
+  },
+  {
+   "id": "mk-price-step",
+   "day": 30,
+   "channel": "marketplace",
+   "title": "Move from launch price to full price (after 30 days or 20 reviews, as the listing promises)",
+   "why": "The launch price must really end, or it's a fake discount (DMCC Act 2024 / CMA pricing guidance)."
+  },
+  {
+   "id": "mk-seasonal",
+   "day": 30,
+   "channel": "marketplace",
+   "title": "Schedule the category's seasonal push (UK tax: early January before the 31 Jan Self Assessment deadline; April tax year)"
+  },
+  {
+   "id": "int-pick-one",
+   "day": -21,
+   "channel": "internal",
+   "gate": true,
+   "title": "Pick ONE implementation of this tool; archive the duplicate branches with a note",
+   "why": "Duplicate builds split effort and data; nothing gets used daily."
+  },
+  {
+   "id": "int-purpose",
+   "day": -14,
+   "channel": "internal",
+   "gate": true,
+   "title": "Write the one decision this tool must improve, and its usage metric (e.g. opened 5 of 7 days)"
+  },
+  {
+   "id": "int-deploy",
+   "day": -3,
+   "channel": "internal",
+   "gate": true,
+   "title": "Deploy behind owner-only auth; check that a logged-out browser cannot see it"
+  },
+  {
+   "id": "int-install",
+   "day": -1,
+   "channel": "internal",
+   "gate": true,
+   "title": "Install as an app on Windows (Edge/Chrome) and Android (Chrome); confirm it opens offline"
+  },
+  {
+   "id": "int-backup",
+   "day": -1,
+   "channel": "internal",
+   "gate": true,
+   "title": "Test backup and restore: export on PC, import on phone, data matches"
+  },
+  {
+   "id": "int-daily",
+   "day": 0,
+   "channel": "internal",
+   "title": "Use it in the daily review for 7 days in a row"
+  },
+  {
+   "id": "int-verdict",
+   "day": 14,
+   "channel": "internal",
+   "title": "Verdict against the usage metric: keep, merge into another tool, or delete"
+  }
+ ],
+ "projects": [
+  {
+   "slug": "etsy-seller-tracker",
+   "kind": "digital",
+   "name": "UK Etsy Seller Profit Tracker",
+   "launch_date": "2026-12-01",
+   "url": "",
+   "one_liner": "See what you really keep from every Etsy sale after every UK fee",
+   "audience": "UK Etsy sellers doing their own books",
+   "category": "Etsy seller tools",
+   "success_metric": "sales (Etsy + Payhip)",
+   "success_target": "20 by T+30 (PROPOSED - confirm)",
+   "kill_threshold": "3 (PROPOSED - confirm)",
+   "channels": [
+    "marketplace"
+   ],
+   "done": [
+    "positioning",
+    "demo-asset",
+    "mk-images",
+    "mk-seo"
+   ],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "gap-mining",
+   "kind": "saas",
+   "name": "Gap-Mining: Weekly Gap Drop",
+   "launch_date": "2027-01-12",
+   "url": "",
+   "one_liner": "Three scored market gaps a week, with cited sources",
+   "audience": "Solo founders and indie makers choosing what to build next",
+   "category": "market research newsletter",
+   "success_metric": "paid subscribers (\u00a3149/mo)",
+   "success_target": "10 by T+30",
+   "kill_threshold": "3",
+   "channels": [
+    "email",
+    "twitter",
+    "linkedin",
+    "indiehackers",
+    "producthunt",
+    "directories"
+   ],
+   "done": [],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "landlord-tracker",
+   "kind": "digital",
+   "name": "UK Landlord Rental Tracker 2026-27",
+   "launch_date": "2026-11-24",
+   "url": "",
+   "one_liner": "Per-property rental income and expenses tracker, SA105-ready",
+   "audience": "UK landlords with 1-5 properties",
+   "category": "UK landlord spreadsheets",
+   "success_metric": "sales (Etsy + Payhip)",
+   "success_target": "20 by T+30 (PROPOSED - confirm)",
+   "kill_threshold": "3 (PROPOSED - confirm)",
+   "channels": [
+    "marketplace"
+   ],
+   "done": [
+    "positioning",
+    "demo-asset",
+    "mk-images",
+    "mk-seo"
+   ],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "skill-tree",
+   "kind": "internal",
+   "name": "Skill Tree",
+   "launch_date": "2026-12-01",
+   "url": "",
+   "one_liner": "Map of Claude skills and plugins with overlaps and gaps",
+   "audience": "Iain (owner)",
+   "category": "internal tool",
+   "success_metric": "days used per week",
+   "success_target": "3 of 7",
+   "kill_threshold": "1 of 7",
+   "channels": [],
+   "done": [],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "sole-trader-tracker",
+   "kind": "digital",
+   "name": "Sole Trader Quarterly Tracker 2026-27",
+   "launch_date": "2026-11-17",
+   "url": "",
+   "one_liner": "Quarterly MTD-ready tracker for UK sole traders, no software subscription",
+   "audience": "UK sole traders preparing for MTD quarterly updates",
+   "category": "UK self-assessment spreadsheets",
+   "success_metric": "sales (Etsy + Payhip)",
+   "success_target": "20 by T+30 (PROPOSED - confirm)",
+   "kill_threshold": "3 (PROPOSED - confirm)",
+   "channels": [
+    "marketplace"
+   ],
+   "done": [
+    "positioning",
+    "demo-asset",
+    "mk-images",
+    "mk-seo"
+   ],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "tax-bundles",
+   "kind": "digital",
+   "name": "MTD Duo + Etsy Seller Tax Kit bundles",
+   "launch_date": "2026-12-08",
+   "url": "",
+   "one_liner": "Two-tracker bundles at a discount to buying separately",
+   "audience": "Buyers of the single trackers; sellers who are also sole traders",
+   "category": "UK self-assessment spreadsheet bundles",
+   "success_metric": "bundle sales",
+   "success_target": "10 by T+30 (PROPOSED - confirm)",
+   "kill_threshold": "2 (PROPOSED - confirm)",
+   "channels": [
+    "marketplace"
+   ],
+   "done": [
+    "positioning",
+    "mk-seo"
+   ],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  },
+  {
+   "slug": "war-room",
+   "kind": "internal",
+   "name": "War Room",
+   "launch_date": "2026-12-01",
+   "url": "",
+   "one_liner": "Daily mission, priorities, MRR and gap alerts in one screen",
+   "audience": "Iain (owner)",
+   "category": "internal tool",
+   "success_metric": "days used per week",
+   "success_target": "5 of 7",
+   "kill_threshold": "2 of 7",
+   "channels": [],
+   "done": [],
+   "results": {
+    "signups": 0,
+    "activated": 0,
+    "paying": 0,
+    "mrr": 0,
+    "metric_value": 0,
+    "top_channel": ""
+   }
+  }
+ ]
+}

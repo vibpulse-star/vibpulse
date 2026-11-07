@@ -1,0 +1,22 @@
+# Source: products/ on branch ccr-95590ecc-o2ezwx. Price £9.99 launch (30 days / 20 reviews), then £16.99.
+slug = "landlord-tracker"
+kind = "digital"
+name = "UK Landlord Rental Tracker 2026-27"
+launch_date = 2026-11-24
+url = ""
+one_liner = "Per-property rental income and expenses tracker, SA105-ready"
+audience = "UK landlords with 1-5 properties"
+category = "UK landlord spreadsheets"
+success_metric = "sales (Etsy + Payhip)"
+success_target = "20 by T+30 (PROPOSED - confirm)"
+kill_threshold = "3 (PROPOSED - confirm)"
+channels = ["marketplace"]
+done = ["positioning", "demo-asset", "mk-images", "mk-seo"]
+
+[results]
+signups = 0
+activated = 0
+paying = 0
+mrr = 0
+metric_value = 0
+top_channel = ""
