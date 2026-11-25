@@ -1,10 +1,2 @@
-node_modules/
-.next/
-.env*
-.dev.vars
-.open-next/
-.wrangler/
-!.env.example
-next-env.d.ts
-*.tsbuildinfo
-.claude/council/
+__pycache__/
+build/

@@ -1,0 +1,3 @@
+[{"name":"Coffee","glyph":"☕","bg":["#6F4E37","#C69C6D"],"components":["com.example.coffee/.Main"]},
+ {"name":"VibPulse","glyph":"VP","bg":["#7C4DFF","#00E5FF"]},
+ {"name":"Notes","glyph":"✎","bg":"#FFB300","fg":"#212121"}]
