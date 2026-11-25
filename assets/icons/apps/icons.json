@@ -1,0 +1,32 @@
+[
+ {
+  "name": "Gap-Mining",
+  "image": "glyphs/diamond.png",
+  "trim": false,
+  "safe_zone": 0.72,
+  "bg": [
+   "#15C179",
+   "#2ED8FA"
+  ]
+ },
+ {
+  "name": "War Room",
+  "image": "glyphs/swords.png",
+  "trim": false,
+  "safe_zone": 0.72,
+  "bg": [
+   "#C11524",
+   "#FA942E"
+  ]
+ },
+ {
+  "name": "Skill Tree",
+  "image": "glyphs/family_history.png",
+  "trim": false,
+  "safe_zone": 0.72,
+  "bg": [
+   "#6515C1",
+   "#FA2EEF"
+  ]
+ }
+]
