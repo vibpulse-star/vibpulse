@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vibpulse",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "workers_dev": false, // only the custom domain, which Cloudflare Access protects
+  "d1_databases": [
+    { "binding": "DB", "database_name": "vibpulse", "database_id": "REPLACE_AFTER_wrangler_d1_create", "migrations_dir": "migrations" }
+  ],
+  "vars": {
+    "SITE_URL": "https://gap-mining.example",
+    "ACCESS_TEAM_DOMAIN": "https://YOURTEAM.cloudflareaccess.com",
+    "MAIL_FROM": "Gap-Mining <login@gap-mining.example>"
+  }
+  // secrets (wrangler secret put): STRIPE_SECRET_KEY, STRIPE_PRICE_ID, SESSION_SECRET,
+  // ACCESS_AUD, SKILL_SNAPSHOT_TOKEN, RESEND_API_KEY
+}
